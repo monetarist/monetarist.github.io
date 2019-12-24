@@ -8,6 +8,5 @@ title: "CV"
 
 Say more about your CV here.
 
-```{r}
-source("FinalExam.R")
+```{r, code = readLines("FinalExam.R")}
 ```
