@@ -36,7 +36,7 @@ Question2C2
 autoplot(Question2C1)
 autoplot(Question2C2)
 
-# #       Question 2 d
+#       Question 2 d
 # Final_Model5 = Arima(CPI, order = c(0,0,1), include.drift  = TRUE)
 # Final_Model6 = Arima(CPI, order = c(0,0,0), include.drift = TRUE)
 # Question2d1 = forecast(Final_Model5, h=3)
