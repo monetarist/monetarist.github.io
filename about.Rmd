@@ -4,5 +4,5 @@ title: "About me"
 
 ## Header
 
-Hi, My name is Yeongjun Oh and this is my website (?).
+Hi, My name is Yeongjun Oh and this is my website.
 I am a Economics & Actuarial Math major at Rutgers University.
