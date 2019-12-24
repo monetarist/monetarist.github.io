@@ -1,7 +1,7 @@
-name: "YOURNAME"                                # CHANGE HERE 
+name: "Monetarist"
 output_dir: "."
 navbar:
-  title: "YOURNAME"                             # CHANGE HERE 
+  title: "Monetarist"
   type: inverse
   left:
     - text: "Home"
@@ -15,11 +15,11 @@ navbar:
       href: cv.html
     - text: "Blog"
       icon: fa-rss
-      href: https://monetarist.github.io/blog/  # CHANGE HERE OR DELETE ALL 3 LINES 
+      href: https://monetarist.github.io/blog/
   right:
     - text: "Contact me"
       icon: fa-envelope-o
-      href: mailto:YOUREMAIL                    # CHANGE HERE 
+      href: mailto:jjunbbug@gmail.com
     - text: "GitHub"
       icon: fa-github
       href: https://github.com/monetarist       # CHANGE HERE 

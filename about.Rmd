@@ -4,4 +4,4 @@ title: "About me"
 
 ## Header
 
-Say more about you here.
+My name is Monetarist and this is my Blog
