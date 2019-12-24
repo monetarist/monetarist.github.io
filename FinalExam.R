@@ -7,9 +7,14 @@ library(tseries)
 
 FinalData = read.csv(file.choose(), header = TRUE)
 summary(FinalData)
+# Following is the explanation for the variables. 
 # GDPC1 is the Real Gross Domestic Product quarterly data.
 # FGOVTR is the Federal Government Tax Receipts quarterly data.
 # NETEXP is the Net Export quarterly data.
+# MDOAH is the Mortgage Debt Outstanding quarterly data.
+# CPI is the Comsumers Price Index quarterly data.
+# DGS10 is the 10-Year Treasury Constant Maturity Rate quarterly data. 
+# unrate is the unemployment rate quarterly data.
 
 CPI = ts(FinalData$CPI, frequency = 4, start = c(1966,1,1))
 View(CPI)
