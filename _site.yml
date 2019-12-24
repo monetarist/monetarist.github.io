@@ -13,6 +13,9 @@ navbar:
     - text: "CV"
       icon: fa-file-pdf-o
       href: cv.html
+    - text: "Project"
+      icon: fa-accusoft
+      href: project.html
     - text: "Blog"
       icon: fa-rss
       href: https://monetarist.github.io/blog/
