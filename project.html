@@ -338,51 +338,14 @@ $(document).ready(function () {
 </div>
 
 
-<pre class="r"><code>library(vars)</code></pre>
-<pre><code>## Loading required package: MASS</code></pre>
-<pre><code>## Loading required package: strucchange</code></pre>
-<pre><code>## Loading required package: zoo</code></pre>
-<pre><code>## 
-## Attaching package: &#39;zoo&#39;</code></pre>
-<pre><code>## The following objects are masked from &#39;package:base&#39;:
-## 
-##     as.Date, as.Date.numeric</code></pre>
-<pre><code>## Loading required package: sandwich</code></pre>
-<pre><code>## Loading required package: urca</code></pre>
-<pre><code>## Loading required package: lmtest</code></pre>
-<pre class="r"><code>library(dplyr)</code></pre>
-<pre><code>## 
-## Attaching package: &#39;dplyr&#39;</code></pre>
-<pre><code>## The following object is masked from &#39;package:MASS&#39;:
-## 
-##     select</code></pre>
-<pre><code>## The following objects are masked from &#39;package:stats&#39;:
-## 
-##     filter, lag</code></pre>
-<pre><code>## The following objects are masked from &#39;package:base&#39;:
-## 
-##     intersect, setdiff, setequal, union</code></pre>
-<pre class="r"><code>library(ggplot2)
-library(forecast)</code></pre>
-<pre><code>## Registered S3 method overwritten by &#39;xts&#39;:
-##   method     from
-##   as.zoo.xts zoo</code></pre>
-<pre><code>## Registered S3 method overwritten by &#39;quantmod&#39;:
-##   method            from
-##   as.zoo.data.frame zoo</code></pre>
-<pre><code>## Registered S3 methods overwritten by &#39;forecast&#39;:
-##   method             from    
-##   fitted.fracdiff    fracdiff
-##   residuals.fracdiff fracdiff</code></pre>
-<pre class="r"><code>library(tseries)</code></pre>
-<pre><code>## 
-##     &#39;tseries&#39; version: 0.10-47
-## 
-##     &#39;tseries&#39; is a package for time series analysis and
-##     computational finance.
-## 
-##     See &#39;library(help=&quot;tseries&quot;)&#39; for details.</code></pre>
-<pre class="r"><code>FinalData = read.csv(file.choose(), header = TRUE)
+<pre class="r"><code>library(vars)
+library(dplyr)
+library(ggplot2)
+library(forecast)
+library(tseries)
+
+
+FinalData = read.csv(file.choose(), header = TRUE)
 summary(FinalData)</code></pre>
 <pre><code>##        DATE         GDPC1           FGOVTR             FFR          
 ##  1/1/1966:  1   Min.   : 4407   Min.   :  98.69   Min.   : 0.07333  
@@ -408,12 +371,10 @@ summary(FinalData)</code></pre>
 ##  3rd Qu.: 7.208   3rd Qu.: 95.46   3rd Qu.: 64.25  
 ##  Max.   :10.667   Max.   :110.32   Max.   :105.19  
 ## </code></pre>
-<pre class="r"><code># This is an explanation of the variables from the FinalData.
-# GDPC1 is the Real Gross Domestic Product quarterly data.
+<pre class="r"><code># GDPC1 is the Real Gross Domestic Product quarterly data.
 # FGOVTR is the Federal Government Tax Receipts quarterly data.
 # NETEXP is the Net Export quarterly data.
 # MDOAH is the Mortgage Debt Outstanding quarterly data.
-# CPI is the Consumer Price Index quarterly data
 
 CPI = ts(FinalData$CPI, frequency = 4, start = c(1966,1,1))
 View(CPI)
