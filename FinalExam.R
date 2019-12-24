@@ -7,9 +7,12 @@ library(tseries)
 
 FinalData = read.csv(file.choose(), header = TRUE)
 summary(FinalData)
+# This is an explanation of the variables from the FinalData.
 # GDPC1 is the Real Gross Domestic Product quarterly data.
 # FGOVTR is the Federal Government Tax Receipts quarterly data.
 # NETEXP is the Net Export quarterly data.
+# MDOAH is the Mortgage Debt Outstanding quarterly data.
+# CPI is the Consumer Price Index quarterly data
 
 CPI = ts(FinalData$CPI, frequency = 4, start = c(1966,1,1))
 View(CPI)
@@ -40,6 +43,7 @@ Question2C2
 autoplot(Question2C1)
 autoplot(Question2C2)
 
+readLines("FinalExam.R")
 #       Question 2 d
 # Final_Model5 = Arima(CPI, order = c(0,0,1), include.drift  = TRUE)
 # Final_Model6 = Arima(CPI, order = c(0,0,0), include.drift = TRUE)

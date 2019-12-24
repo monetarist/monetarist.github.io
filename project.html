@@ -363,8 +363,18 @@ $(document).ready(function () {
 ## 
 ##     intersect, setdiff, setequal, union</code></pre>
 <pre class="r"><code>library(ggplot2)
-library(forecast)
-library(tseries)</code></pre>
+library(forecast)</code></pre>
+<pre><code>## Registered S3 method overwritten by &#39;xts&#39;:
+##   method     from
+##   as.zoo.xts zoo</code></pre>
+<pre><code>## Registered S3 method overwritten by &#39;quantmod&#39;:
+##   method            from
+##   as.zoo.data.frame zoo</code></pre>
+<pre><code>## Registered S3 methods overwritten by &#39;forecast&#39;:
+##   method             from    
+##   fitted.fracdiff    fracdiff
+##   residuals.fracdiff fracdiff</code></pre>
+<pre class="r"><code>library(tseries)</code></pre>
 <pre><code>## 
 ##     &#39;tseries&#39; version: 0.10-47
 ## 
@@ -398,9 +408,12 @@ summary(FinalData)</code></pre>
 ##  3rd Qu.: 7.208   3rd Qu.: 95.46   3rd Qu.: 64.25  
 ##  Max.   :10.667   Max.   :110.32   Max.   :105.19  
 ## </code></pre>
-<pre class="r"><code># GDPC1 is the Real Gross Domestic Product quarterly data.
+<pre class="r"><code># This is an explanation of the variables from the FinalData.
+# GDPC1 is the Real Gross Domestic Product quarterly data.
 # FGOVTR is the Federal Government Tax Receipts quarterly data.
 # NETEXP is the Net Export quarterly data.
+# MDOAH is the Mortgage Debt Outstanding quarterly data.
+# CPI is the Consumer Price Index quarterly data
 
 CPI = ts(FinalData$CPI, frequency = 4, start = c(1966,1,1))
 View(CPI)
