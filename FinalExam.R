@@ -7,6 +7,10 @@ library(tseries)
 
 FinalData = read.csv(file.choose(), header = TRUE)
 summary(FinalData)
+# GDPC1 is the Real Gross Domestic Product quarterly data.
+# FGOVTR is the Federal Government Tax Receipts quarterly data.
+# NETEXP is the Net Export quarterly data.
+
 CPI = ts(FinalData$CPI, frequency = 4, start = c(1966,1,1))
 View(CPI)
 #         Question 2 a
