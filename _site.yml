@@ -22,7 +22,7 @@ navbar:
       href: mailto:jjunbbug@gmail.com
     - text: "GitHub"
       icon: fa-github
-      href: https://github.com/monetarist       # CHANGE HERE 
+      href: https://github.com/monetarist/monetarist.github.io
 output:
   html_document:
     theme: cosmo
