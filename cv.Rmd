@@ -4,6 +4,6 @@ title: "CV"
 
 <a href="CV.pdf#" class="download" title="Download CV as PDF">Download CV</a>			
 
-## Header
+## This is my CV. 
 
-Say more about your CV here.
+Please feel free to download my CV.
