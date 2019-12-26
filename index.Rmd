@@ -2,4 +2,5 @@
 title: "Welcome to my website!"
 ---
 
-You're up and running!
+This website has my quantiative project and my resume!
+Thank you for checking out my website!
