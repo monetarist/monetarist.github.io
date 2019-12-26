@@ -338,14 +338,62 @@ $(document).ready(function () {
 </div>
 
 
-<pre class="r"><code>library(vars)
-library(dplyr)
-library(ggplot2)
-library(forecast)
-library(tseries)
+<pre class="r"><code>library(vars)</code></pre>
+<pre><code>## Loading required package: MASS</code></pre>
+<pre><code>## Loading required package: strucchange</code></pre>
+<pre><code>## Loading required package: zoo</code></pre>
+<pre><code>## 
+## Attaching package: &#39;zoo&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     as.Date, as.Date.numeric</code></pre>
+<pre><code>## Loading required package: sandwich</code></pre>
+<pre><code>## Loading required package: urca</code></pre>
+<pre><code>## Loading required package: lmtest</code></pre>
+<pre class="r"><code>library(dplyr)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;dplyr&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:MASS&#39;:
+## 
+##     select</code></pre>
+<pre><code>## The following objects are masked from &#39;package:stats&#39;:
+## 
+##     filter, lag</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     intersect, setdiff, setequal, union</code></pre>
+<pre class="r"><code>library(ggplot2)
+library(forecast)</code></pre>
+<pre><code>## Registered S3 method overwritten by &#39;xts&#39;:
+##   method     from
+##   as.zoo.xts zoo</code></pre>
+<pre><code>## Registered S3 method overwritten by &#39;quantmod&#39;:
+##   method            from
+##   as.zoo.data.frame zoo</code></pre>
+<pre><code>## Registered S3 methods overwritten by &#39;forecast&#39;:
+##   method             from    
+##   fitted.fracdiff    fracdiff
+##   residuals.fracdiff fracdiff</code></pre>
+<pre class="r"><code>library(tseries)</code></pre>
+<pre><code>## 
+##     &#39;tseries&#39; version: 0.10-47
+## 
+##     &#39;tseries&#39; is a package for time series analysis and
+##     computational finance.
+## 
+##     See &#39;library(help=&quot;tseries&quot;)&#39; for details.</code></pre>
+<pre class="r"><code>FinalData = read.csv(file.choose(), header = TRUE)
+# Following is the explanation for the variables. 
+# GDPC1 is the Real Gross Domestic Product quarterly data.
+# FGOVTR is the Federal Government Tax Receipts quarterly data.
+# NETEXP is the Net Export quarterly data.
+# MDOAH is the Mortgage Debt Outstanding quarterly data.
+# CPI is the Comsumers Price Index quarterly data.
+# DGS10 is the 10-Year Treasury Constant Maturity Rate quarterly data. 
+# unrate is the unemployment rate quarterly data.
+# IP is the industrial Production quarterly data.
+# PD is the Public Debt quarterly data.
 
-
-FinalData = read.csv(file.choose(), header = TRUE)
 summary(FinalData)</code></pre>
 <pre><code>##        DATE         GDPC1           FGOVTR             FFR          
 ##  1/1/1966:  1   Min.   : 4407   Min.   :  98.69   Min.   : 0.07333  
@@ -371,21 +419,77 @@ summary(FinalData)</code></pre>
 ##  3rd Qu.: 7.208   3rd Qu.: 95.46   3rd Qu.: 64.25  
 ##  Max.   :10.667   Max.   :110.32   Max.   :105.19  
 ## </code></pre>
-<pre class="r"><code># Following is the explanation for the variables. 
-# GDPC1 is the Real Gross Domestic Product quarterly data.
-# FGOVTR is the Federal Government Tax Receipts quarterly data.
-# NETEXP is the Net Export quarterly data.
-# MDOAH is the Mortgage Debt Outstanding quarterly data.
-# CPI is the Comsumers Price Index quarterly data.
-# DGS10 is the 10-Year Treasury Constant Maturity Rate quarterly data. 
-# unrate is the unemployment rate quarterly data.
+<pre class="r"><code>CPI = ts(FinalData$CPI, frequency = 4, start = c(1966,1,1))
 
-CPI = ts(FinalData$CPI, frequency = 4, start = c(1966,1,1))
-View(CPI)
-#         Question 2 a
+#         Decomposition of CPI data. 
+Decompose_CPI = stl(CPI, s.window = 8)
+autoplot(Decompose_CPI)</code></pre>
+<p><img src="project_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+<pre class="r"><code>DTrend_CPI = trendcycle(Decompose_CPI)
+autoplot(DTrend_CPI)</code></pre>
+<p><img src="project_files/figure-html/unnamed-chunk-1-2.png" width="672" /></p>
+<pre class="r"><code>DSeason_CPI = seasonal(Decompose_CPI)
+autoplot(DSeason_CPI)</code></pre>
+<p><img src="project_files/figure-html/unnamed-chunk-1-3.png" width="672" /></p>
+<pre class="r"><code>DSeason_CPI</code></pre>
+<pre><code>##               Qtr1          Qtr2          Qtr3          Qtr4
+## 1966 -0.0206425062 -0.0104213114 -0.0072901296  0.0356154411
+## 1967 -0.0176029616 -0.0089127383 -0.0091656913  0.0316906241
+## 1968 -0.0127343179 -0.0075268037 -0.0128974958  0.0242591050
+## 1969  0.0000845245 -0.0032395581 -0.0192210339  0.0105300986
+## 1970  0.0165909706  0.0098536620 -0.0218007917 -0.0011145188
+## 1971  0.0095772441  0.0133501492 -0.0277470634 -0.0043118126
+## 1972  0.0161703605 -0.0013793898 -0.0296756115  0.0195962192
+## 1973  0.0350556701 -0.0373441402 -0.0321822095  0.0424378919
+## 1974  0.0526171781 -0.0625708842 -0.0372370213  0.0457612743
+## 1975  0.0577750389 -0.0605384446 -0.0281605171  0.0437979605
+## 1976  0.0414971703 -0.0511249834 -0.0099105136  0.0215235970
+## 1977  0.0159668506 -0.0118562413 -0.0148010525 -0.0437173967
+## 1978  0.0089666775  0.0613391698 -0.0260621539 -0.0897608929
+## 1979 -0.0049773847  0.0786393913  0.0242075019 -0.0664897529
+## 1980 -0.0582245128  0.0401394938  0.1019341735 -0.0282477942
+## 1981 -0.1041417072  0.0113289667  0.1366514601 -0.0100565101
+## 1982 -0.1124278878 -0.0116019477  0.1505188865  0.0253057327
+## 1983 -0.1070690437 -0.0590978745  0.1266496043  0.0576476042
+## 1984 -0.0419619678 -0.0839783040  0.0320573693  0.0314247881
+## 1985  0.0502564784 -0.0679906837 -0.0432326787  0.0076607783
+## 1986  0.0872666877 -0.0418832148 -0.0509777322 -0.0039896713
+## 1987  0.0663555149 -0.0187462818 -0.0368908550 -0.0241092674
+## 1988  0.0450736065 -0.0216998416 -0.0156249131 -0.0027540714
+## 1989  0.0186823154 -0.0274033649 -0.0107326831  0.0430264210
+## 1990  0.0152728269 -0.0407170005 -0.0424172849  0.0743699058
+## 1991  0.0418330828 -0.0650030184 -0.0677863169  0.1098725167
+## 1992  0.0483155130 -0.0853527309 -0.0584054183  0.1036151388
+## 1993  0.0223801303 -0.0322571551 -0.0486544604  0.0311225271
+## 1994  0.0064923106  0.0224174492 -0.0475661570  0.0059311767
+## 1995  0.0203710671  0.0140135053 -0.0394702871  0.0223637577
+## 1996  0.0188813384 -0.0099335288 -0.0262615309  0.0304835552
+## 1997  0.0057424514 -0.0219869133 -0.0265362671  0.0324258732
+## 1998  0.0145501530 -0.0306689847 -0.0063739795  0.0045753464
+## 1999  0.0082631220  0.0087971879  0.0425302407 -0.0750723723
+## 2000 -0.0110661282  0.0516826442  0.0665645310 -0.1551398552
+## 2001  0.0542889993  0.0461413605  0.0586354704 -0.1857333970
+## 2002  0.1084020535  0.0076459173  0.0541785584 -0.1199032648
+## 2003  0.0750679344 -0.0793220919  0.1066120856 -0.0472321957
+## 2004  0.0200226412 -0.1326325428  0.1778401777 -0.0836762012
+## 2005 -0.0582934145 -0.0650332735  0.3286525448 -0.1938401664
+## 2006 -0.2818405591  0.0338210518  0.6934068766 -0.2959467643
+## 2007 -0.5291695267  0.0253753811  0.8945267062 -0.3191383309
+## 2008 -0.5638860218  0.0191868388  0.8007296428 -0.3000696022
+## 2009 -0.4815042535  0.0108774914  0.6555951138 -0.1793436130
+## 2010 -0.3422295335 -0.0963532845  0.4168271262 -0.0187374347
+## 2011 -0.0897276747 -0.1775247894  0.0532195315  0.0427762044
+## 2012  0.0894940794 -0.0812189598  0.0038892730  0.0009757587
+## 2013 -0.0526310730  0.0062697743  0.1671854133  0.0186152852
+## 2014 -0.2283647437 -0.0097617261  0.1925053352  0.0202745368
+## 2015 -0.1601162448 -0.0068234697  0.1209301263  0.0042855011
+## 2016 -0.1287368979  0.0172554161  0.1163502500 -0.0013779400
+## 2017 -0.1347325041  0.0253268544  0.1116830302 -0.0022995356
+## 2018 -0.1327436129  0.0283398445  0.1017834782 -0.0032094478</code></pre>
+<pre class="r"><code>#         Using auto.ARIMA to find appropriate ARIMA model.
 CPI_ARIMA = auto.arima(CPI)
 checkresiduals(CPI_ARIMA)</code></pre>
-<p><img src="project_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+<p><img src="project_files/figure-html/unnamed-chunk-1-4.png" width="672" /></p>
 <pre><code>## 
 ##  Ljung-Box test
 ## 
@@ -393,15 +497,20 @@ checkresiduals(CPI_ARIMA)</code></pre>
 ## Q* = 12.248, df = 4, p-value = 0.0156
 ## 
 ## Model df: 4.   Total lags used: 8</code></pre>
-<pre class="r"><code>CPI_ARIMA_Forecast = forecast(CPI_ARIMA, h =3)
+<pre class="r"><code># This is the residual plot, ACF and the histogram of the residuals.
+# The residual plot indicates that the mean of the residuals are  0. 
+# The ACF of the residuals are below the confidence interval.
+# The histogram of the residuals are under the normal distribution. 
+# From the followin evidence, one can conclude that the residuals are white noise. 
+CPI_ARIMA_Forecast = forecast(CPI_ARIMA, h =3)
 CPI_ARIMA_Forecast</code></pre>
 <pre><code>##         Point Forecast    Lo 80    Hi 80    Lo 95    Hi 95
 ## 2019 Q1       253.7208 252.7230 254.7187 252.1948 255.2469
 ## 2019 Q2       254.7666 253.0451 256.4882 252.1338 257.3995
 ## 2019 Q3       255.8209 253.6002 258.0417 252.4246 259.2173</code></pre>
 <pre class="r"><code>autoplot(CPI_ARIMA_Forecast)</code></pre>
-<p><img src="project_files/figure-html/unnamed-chunk-1-2.png" width="672" /></p>
-<pre class="r"><code>#         Question 2 b
+<p><img src="project_files/figure-html/unnamed-chunk-1-5.png" width="672" /></p>
+<pre class="r"><code>#         Using (0,1,1) ARIMA fucntion with the drift to forecast the CPI
 Final_Model1 = Arima(CPI, order = c(0,1,1), include.drift = FALSE)
 Question2B = forecast(Final_Model1, h =3)
 Question2B</code></pre>
@@ -409,18 +518,27 @@ Question2B</code></pre>
 ## 2019 Q1       252.9681 251.6523 254.2839 250.9558 254.9805
 ## 2019 Q2       252.9681 250.4448 255.4914 249.1091 256.8272
 ## 2019 Q3       252.9681 249.6511 256.2851 247.8952 258.0411</code></pre>
-<pre class="r"><code>autoplot(Question2B)</code></pre>
-<p><img src="project_files/figure-html/unnamed-chunk-1-3.png" width="672" /></p>
-<pre class="r"><code>Final_Model2 = Arima(CPI, order = c(0,1,0), include.drift = FALSE)
-Question2B2 = forecast(Final_Model2, h =3)
-Question2B2</code></pre>
-<pre><code>##         Point Forecast    Lo 80    Hi 80    Lo 95    Hi 95
-## 2019 Q1        252.759 251.0457 254.4723 250.1387 255.3793
-## 2019 Q2        252.759 250.3360 255.1820 249.0534 256.4646
-## 2019 Q3        252.759 249.7915 255.7265 248.2205 257.2975</code></pre>
-<pre class="r"><code>autoplot(Question2B2)</code></pre>
-<p><img src="project_files/figure-html/unnamed-chunk-1-4.png" width="672" /></p>
-<pre class="r"><code>#         Question 2 c
+<pre class="r"><code># Unlike the Auto.Arima function, the (0,1,1) ARIMA model with a drift have identical forecast.
+# The difference between both models becomes bigger as the time progresses. 
+# In the 2019 Q1 forecast, the difference was meager 0.7527.
+autoplot(Question2B)</code></pre>
+<p><img src="project_files/figure-html/unnamed-chunk-1-6.png" width="672" /></p>
+<pre class="r"><code>checkresiduals(Final_Model1)</code></pre>
+<p><img src="project_files/figure-html/unnamed-chunk-1-7.png" width="672" /></p>
+<pre><code>## 
+##  Ljung-Box test
+## 
+## data:  Residuals from ARIMA(0,1,1)
+## Q* = 26.98, df = 7, p-value = 0.000336
+## 
+## Model df: 1.   Total lags used: 8</code></pre>
+<pre class="r"><code># This is the residual plot, ACF and the histogram of the residuals.
+# It&#39;s hard to conclude that the mean of the residuals are zero from the residual plot.
+# The ACF of the residuals are above the confidence interval.
+# The histogram of the residuals are under the normal distribution. 
+# From the followin evidence, residuals are not white noise. The residual of the model is biased. 
+
+#         Effect of drift in the ARIMA model
 Final_Model3 = Arima(CPI, order = c(2,1,3), include.drift = TRUE)
 Final_Model4 = Arima(CPI, order = c(2,1,3), include.drift = FALSE)
 Question2C1 = forecast(Final_Model3, h =3)
@@ -436,9 +554,9 @@ Question2C1</code></pre>
 ## 2019 Q2       254.7572 253.0339 256.4805 252.1216 257.3928
 ## 2019 Q3       255.7725 253.5202 258.0248 252.3279 259.2171</code></pre>
 <pre class="r"><code>autoplot(Question2C1)</code></pre>
-<p><img src="project_files/figure-html/unnamed-chunk-1-5.png" width="672" /></p>
+<p><img src="project_files/figure-html/unnamed-chunk-1-8.png" width="672" /></p>
 <pre class="r"><code>autoplot(Question2C2)</code></pre>
-<p><img src="project_files/figure-html/unnamed-chunk-1-6.png" width="672" /></p>
+<p><img src="project_files/figure-html/unnamed-chunk-1-9.png" width="672" /></p>
 <pre class="r"><code>#       Question 2 d
 # Final_Model5 = Arima(CPI, order = c(0,0,1), include.drift  = TRUE)
 # Final_Model6 = Arima(CPI, order = c(0,0,0), include.drift = TRUE)

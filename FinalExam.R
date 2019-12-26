@@ -6,7 +6,6 @@ library(tseries)
 
 
 FinalData = read.csv(file.choose(), header = TRUE)
-summary(FinalData)
 # Following is the explanation for the variables. 
 # GDPC1 is the Real Gross Domestic Product quarterly data.
 # FGOVTR is the Federal Government Tax Receipts quarterly data.
@@ -15,27 +14,49 @@ summary(FinalData)
 # CPI is the Comsumers Price Index quarterly data.
 # DGS10 is the 10-Year Treasury Constant Maturity Rate quarterly data. 
 # unrate is the unemployment rate quarterly data.
+# IP is the industrial Production quarterly data.
+# PD is the Public Debt quarterly data.
 
+summary(FinalData)
 CPI = ts(FinalData$CPI, frequency = 4, start = c(1966,1,1))
-View(CPI)
-#         Question 2 a
+
+#         Decomposition of CPI data. 
+Decompose_CPI = stl(CPI, s.window = 8)
+autoplot(Decompose_CPI)
+DTrend_CPI = trendcycle(Decompose_CPI)
+autoplot(DTrend_CPI)
+DSeason_CPI = seasonal(Decompose_CPI)
+autoplot(DSeason_CPI)
+DSeason_CPI
+
+#         Using auto.ARIMA to find appropriate ARIMA model.
 CPI_ARIMA = auto.arima(CPI)
 checkresiduals(CPI_ARIMA)
+# This is the residual plot, ACF and the histogram of the residuals.
+# The residual plot indicates that the mean of the residuals are  0. 
+# The ACF of the residuals are below the confidence interval.
+# The histogram of the residuals are under the normal distribution. 
+# From the followin evidence, one can conclude that the residuals are white noise. 
 CPI_ARIMA_Forecast = forecast(CPI_ARIMA, h =3)
 CPI_ARIMA_Forecast
 autoplot(CPI_ARIMA_Forecast)
-#         Question 2 b
+
+#         Using (0,1,1) ARIMA fucntion with the drift to forecast the CPI
 Final_Model1 = Arima(CPI, order = c(0,1,1), include.drift = FALSE)
 Question2B = forecast(Final_Model1, h =3)
 Question2B
+# Unlike the Auto.Arima function, the (0,1,1) ARIMA model with a drift have identical forecast.
+# The difference between both models becomes bigger as the time progresses. 
+# In the 2019 Q1 forecast, the difference was meager 0.7527.
 autoplot(Question2B)
+checkresiduals(Final_Model1)
+# This is the residual plot, ACF and the histogram of the residuals.
+# It's hard to conclude that the mean of the residuals are zero from the residual plot.
+# The ACF of the residuals are above the confidence interval.
+# The histogram of the residuals are under the normal distribution. 
+# From the followin evidence, residuals are not white noise. The residual of the model is biased. 
 
-Final_Model2 = Arima(CPI, order = c(0,1,0), include.drift = FALSE)
-Question2B2 = forecast(Final_Model2, h =3)
-Question2B2
-autoplot(Question2B2)
-
-#         Question 2 c
+#         Effect of drift in the ARIMA model
 Final_Model3 = Arima(CPI, order = c(2,1,3), include.drift = TRUE)
 Final_Model4 = Arima(CPI, order = c(2,1,3), include.drift = FALSE)
 Question2C1 = forecast(Final_Model3, h =3)
