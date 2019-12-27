@@ -2,7 +2,7 @@
 title: "About me"
 ---
 
-## Yeongjun Oh
+## This is me
 
 Hi, My name is Yeongjun Oh and this is my website.
 I am a Economics & Actuarial Math major at Rutgers University.
