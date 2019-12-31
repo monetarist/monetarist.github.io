@@ -21,13 +21,23 @@ summary(FinalData)
 CPI = ts(FinalData$CPI, frequency = 4, start = c(1966,1,1))
 
 #         Decomposition of CPI data. 
-Decompose_CPI = stl(CPI, s.window = 8)
+Decompose_CPI = stl(CPI, s.window = "per")
 autoplot(Decompose_CPI)
+
+#         This is the trend of the CPI
 DTrend_CPI = trendcycle(Decompose_CPI)
-autoplot(DTrend_CPI)
+autoplot(DTrend_CPI)+ ylab("Trend")
+# There is a strong upward trend.
+
+#         This is a seasonality of the CPI
 DSeason_CPI = seasonal(Decompose_CPI)
-autoplot(DSeason_CPI)
-DSeason_CPI
+autoplot(DSeason_CPI)+ ylab("Seasonality")
+# It's clear that the seasonality is very weak or doesn't exist.
+
+
+#         This is a deseasonalized plot of the CPI
+Deseasonal_CPI = seasadj(Decompose_CPI)
+autoplot(Deseasonal_CPI)+ ylab("Deseasonal CPI")
 
 #         Using auto.ARIMA to find appropriate ARIMA model.
 CPI_ARIMA = auto.arima(CPI)
