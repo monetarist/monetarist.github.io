@@ -458,6 +458,8 @@ checkresiduals(CPI_ARIMA)</code></pre>
 # The ACF of the residuals are below the confidence interval.
 # The histogram of the residuals are under the normal distribution. 
 # From the followin evidence, one can conclude that the residuals are white noise. 
+
+#       Forecasting with ARIMA model selected by auto.ARIMA
 CPI_ARIMA_Forecast = forecast(CPI_ARIMA, h =3)
 CPI_ARIMA_Forecast</code></pre>
 <pre><code>##         Point Forecast    Lo 80    Hi 80    Lo 95    Hi 95
@@ -513,47 +515,69 @@ Question2C1</code></pre>
 <p><img src="project_files/figure-html/unnamed-chunk-1-9.png" width="672" /></p>
 <pre class="r"><code>autoplot(Question2C2)</code></pre>
 <p><img src="project_files/figure-html/unnamed-chunk-1-10.png" width="672" /></p>
-<pre class="r"><code>#       Question 2 d
-# Final_Model5 = Arima(CPI, order = c(0,0,1), include.drift  = TRUE)
-# Final_Model6 = Arima(CPI, order = c(0,0,0), include.drift = TRUE)
-# Question2d1 = forecast(Final_Model5, h=3)
-# Question2d2 = forecast(Final_Model6, h=3)
-
-# Question2d1
-# Question2d2
-# autoplot(Question2d1)
-# autoplot(Question2d2)
-
-# #     Question 2 e
-# Final_Model7 = Arima(CPI, order = c(0,2,1), include.drift = FALSE)
-# Question2e = forecast(Final_Model7, h=3)
-# Question2e
-# autoplot(Question2e)
-
-# #     Question 3 a
-# TrendCPI = c(1:length(CPI))
-# fit = auto.arima(CPI, xreg = TrendCPI)
-# summary(fit)
-# #View(TrendCPI)
-
-# fcast = forecast(fit, xreg= c(213,214,215))
-# fcast
-# autoplot(fcast)
-# # the trend is simple counting. It&#39;s logical to increase the count. 
-# accuracy(fcast, d =1 , D=0)
-
-# #     Question 3 b
-# CPItrendRegression = tslm(CPI ~ trend)
-# summary(CPItrendRegression)
-# CPIRegressionForecast = forecast(CPItrendRegression, h =3)
-# CPIRegressionForecast
-
-
-# #     Question 3 c
-# accuracy(CPIRegressionForecast)
-# accuracy(fcast, d =1 , D=0)
-# # The RMSE for Auto-arima model was lower. Thus I&#39;ve concluded that the Auto-arima
-# # is more accurate than the Simple Regression model.
+<pre class="r"><code>#     Fitting a linear trend model with an ARIMA error structure to the assigned Variable
+ TrendCPI = c(1:length(CPI))
+ # the TrendCPI variable is simple counting. Thus the trend is simple counting. 
+ fit = auto.arima(CPI, xreg = TrendCPI)
+ fcast = forecast(fit, xreg= c(213,214,215))
+ fcast</code></pre>
+<pre><code>##         Point Forecast    Lo 80    Hi 80    Lo 95    Hi 95
+## 2019 Q1       253.7250 252.7316 254.7185 252.2057 255.2444
+## 2019 Q2       254.7740 253.0719 256.4761 252.1709 257.3771
+## 2019 Q3       255.8234 253.6477 257.9991 252.4959 259.1509</code></pre>
+<pre class="r"><code> # Since the TrendCPI is simple counting, It&#39;s logical to increase the count.
+ autoplot(fcast)</code></pre>
+<p><img src="project_files/figure-html/unnamed-chunk-1-11.png" width="672" /></p>
+<pre class="r"><code>#       Time Series Regression model
+ CPItrendRegression = tslm(CPI ~ trend+season)
+ summary(CPItrendRegression)</code></pre>
+<pre><code>## 
+## Call:
+## tslm(formula = CPI ~ trend + season)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -9.4006 -2.5182  0.6727  2.7547 13.5339 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) 17.389368   0.791456  21.971   &lt;2e-16 ***
+## trend        1.123358   0.004908 228.869   &lt;2e-16 ***
+## season2     -0.058276   0.849478  -0.069    0.945    
+## season3     -0.022457   0.849521  -0.026    0.979    
+## season4     -0.210368   0.849591  -0.248    0.805    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 4.373 on 207 degrees of freedom
+## Multiple R-squared:  0.9961, Adjusted R-squared:  0.996 
+## F-statistic: 1.31e+04 on 4 and 207 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code> # Compared to first quarter, season 2 and 3 is expected to be slightly lower than the trend. 
+ # The low coefficient for season 2 and 3 indicate the seasonality is weak or doesn&#39;t exist.
+ # The high p-value for the seasons indicate that there is no seasonality. 
+ # However, there is strong positive trend for CPI. 
+ 
+ #      Forecasting with Regression model
+ CPIRegressionForecast = forecast(CPItrendRegression, h =3)
+ CPIRegressionForecast</code></pre>
+<pre><code>##         Point Forecast    Lo 80    Hi 80    Lo 95    Hi 95
+## 2019 Q1       256.6645 250.9490 262.3801 247.9000 265.4291
+## 2019 Q2       257.7296 252.0140 263.4452 248.9650 266.4942
+## 2019 Q3       258.8888 253.1732 264.6044 250.1242 267.6534</code></pre>
+<pre class="r"><code> #     Comparing accuracy of Regression &amp; ARIMA error structure model
+ accuracy(CPIRegressionForecast, d =1, D =0)</code></pre>
+<pre><code>##                         ME     RMSE      MAE       MPE     MAPE     MASE
+## Training set -9.723207e-16 4.321008 3.361012 0.1059919 4.877736 2.925139
+##                   ACF1
+## Training set 0.9570962</code></pre>
+<pre class="r"><code> accuracy(fcast, d =1 , D=0)</code></pre>
+<pre><code>##                       ME      RMSE       MAE      MPE      MAPE      MASE
+## Training set -0.03736094 0.7678488 0.4978913 -0.16188 0.4998526 0.4333221
+##                      ACF1
+## Training set -0.004795397</code></pre>
+<pre class="r"><code># d =1 &amp; D =0 is the default. The default will be used throughout the project for consistency.
+# The RMSE for Auto-arima model was lower. Thus I&#39;ve concluded that the Auto-arima 
+# is more accurate than the Simple Regression model.
 
 # #     Question 4 a
 # summary(FinalData)
