@@ -107,56 +107,73 @@ autoplot(Question2C2)
 # The RMSE for Auto-arima model was lower. Thus I've concluded that the Auto-arima 
 # is more accurate than the Simple Regression model.
 
-# #     Question 4 a
-# summary(FinalData)
-# cor(FinalData$CPI, FinalData$GDPC1)
-# RGDP = ts(FinalData$GDPC1, frequency = 4, start = c(1966,1,1))
-# options(scipen = 999)
-# VARselect(CPI, RGDP, lag.max = 4, type = 'const')
-# var = VAR(cbind(CPI, RGDP), p =1, type = 'const')
-# summary(var)
+# #     Fitting a Vector Autoregressive model using p = 1 (only one lag) with highly correated variable.
+summary(FinalData)
+cor(FinalData$CPI, FinalData$GDPC1)
+# The CPI & Real Gross Domestic Product has high correation.
 
-# #     Question 4 b
-# var1=irf(x=var, impulse="RGDP", boot=TRUE, n.ahead = 3)
-# var1
-# var2=irf(x=var, impulse="CPI", boot=TRUE, n.ahead = 3)
-# var2
+#       Modeling a Vector Autoregressive model
+RGDP = ts(FinalData$GDPC1, frequency = 4, start = c(1966,1,1))
+options(scipen = 999)
+#VARselect(CPI, RGDP, lag.max = 4, type = 'const')
+var = VAR(cbind(CPI, RGDP), p =1, type = 'const')
+summary(var)
 
-# #     Question 5
-# fvar = forecast(var, h=3)
-# summary(fvar)
-# fvar
-# CPI_ARIMA_Forecast
-# accuracy(fvar, d=1, D=0)
-# # There is no seasonality, thus the code requires to put d =1 and D = 0. 
-# accuracy(CPI_ARIMA_Forecast)
-# # RMSE for the Var model was higher, thus ARIMA has higher accuracy. 
+#               The responses up to 3 periods for both variables due to a one unit shock in each variable
+#       1 unit shock for GDP
+ var1=irf(x=var, impulse="RGDP", boot=TRUE, n.ahead = 3)
+ var1
+ # It's clear that shock in the GDP will have little or no impact to the CPI
 
-# #     Question 6
-# summary(FinalData)
-# FGOVTR = ts(FinalData$FGOVTR, frequency = 4, start = c(1966,1,1))
-# FFR = ts(FinalData$FFR, frequency = 4, start = c(1966,1,1))
-# NETEXP = ts(FinalData$NETEXP, frequency = 4, start = c(1966,1,1))
+#       1 unit shock for CPI       
+ var2=irf(x=var, impulse="CPI", boot=TRUE, n.ahead = 3)
+ var2
+# However, CPI's shock will impact the GDP.
 
-# MDOAH = ts(FinalData$MDOAH, frequency = 4, start = c(1966,1,1))
-# DGS10 = ts(FinalData$DGS10, frequency = 4, start = c(1966,1,1))
-# unrate = ts(FinalData$unrate, frequency = 4, start = c(1966,1,1))
-# IP = ts(FinalData$IP, frequency = 4, start = c(1966,1,1))
-# PD = ts(FinalData$PD, frequency = 4, start = c(1966,1,1))
+#       Using AIC criteria to determine the optimal lags in the VAR and 
+#       generating forecast values for the assigned variable up to 3 periods forward
+ fvar = forecast(var, h=3) 
+ # This code has Error : Error in accuracy
+ # Needs to be Fixed in the future.
+ #summary(fvar, d=1,D=0)
+ 
+# 3 Point Forecast for CPI & GDP from the Vector Autoregressive Model
+ fvar
+ # Auto.ARMA Model & VAR model accuracy comparison
+accuracy(fvar, d=1, D=0)
+# There is no seasonality, thus the code requires to put d =1 and D = 0. 
+accuracy(CPI_ARIMA_Forecast)
+# RMSE for the Var model was higher, thus ARIMA has higher accuracy. 
 
-# pca = prcomp(cbind(RGDP,FGOVTR,FFR,NETEXP,MDOAH,DGS10,unrate, IP, PD))
-# summary(pca)
-# plot(pca$x[,1])
-# pc = ts(pca$x[,1], frequency = 4, start = c(1966,1,1))
-# summary(pc)
-# plot(pc)
-# # going back to problem 5
-# var3 = VAR(cbind(CPI, pc), p =1, type = 'const')
-# fvar2 = forecast(var3, h =3)
-# autoplot(fvar2)
-# fvar2
-# # Comparing the accuracy
-# accuracy(fvar2,d=1, D=0)
-# accuracy(fvar,d=1, D=0)
-# #The RMSE for the principle component RMSE is lower.
-# #Thus, it's preferrable to use the model with the PC component
+#     Adding a principal component with all of the variables
+FGOVTR = ts(FinalData$FGOVTR, frequency = 4, start = c(1966,1,1))
+FFR = ts(FinalData$FFR, frequency = 4, start = c(1966,1,1))
+NETEXP = ts(FinalData$NETEXP, frequency = 4, start = c(1966,1,1))
+
+MDOAH = ts(FinalData$MDOAH, frequency = 4, start = c(1966,1,1))
+DGS10 = ts(FinalData$DGS10, frequency = 4, start = c(1966,1,1))
+unrate = ts(FinalData$unrate, frequency = 4, start = c(1966,1,1))
+IP = ts(FinalData$IP, frequency = 4, start = c(1966,1,1))
+PD = ts(FinalData$PD, frequency = 4, start = c(1966,1,1))
+
+pca = prcomp(cbind(RGDP,FGOVTR,FFR,NETEXP,MDOAH,DGS10,unrate, IP, PD))
+#       This is the principal component of the all of the values excpet CPI.
+summary(pca)
+plot(pca$x[,1])
+pc = ts(pca$x[,1], frequency = 4, start = c(1966,1,1))
+summary(pc)
+plot(pc)
+#        Forecasting with PC componenet model. 
+var3 = VAR(cbind(CPI, pc), p =1, type = 'const')
+fvar2 = forecast(var3, h =3)
+autoplot(fvar2)
+fvar2
+# The Vector Autoregressive model with Principal component suggest that
+# For first quarter of 2019, the CPI will be 253.8980. 
+# The exact meaning of the Principal component is hard to interpert. 
+
+#       Comparing the accuracy
+accuracy(fvar2,d=1, D=0)
+accuracy(fvar,d=1, D=0)
+#The RMSE for the principle component RMSE is lower.
+#Thus, it's preferrable to use the model with the PC component

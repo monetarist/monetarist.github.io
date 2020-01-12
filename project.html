@@ -363,18 +363,8 @@ $(document).ready(function () {
 ## 
 ##     intersect, setdiff, setequal, union</code></pre>
 <pre class="r"><code>library(ggplot2)
-library(forecast)</code></pre>
-<pre><code>## Registered S3 method overwritten by &#39;xts&#39;:
-##   method     from
-##   as.zoo.xts zoo</code></pre>
-<pre><code>## Registered S3 method overwritten by &#39;quantmod&#39;:
-##   method            from
-##   as.zoo.data.frame zoo</code></pre>
-<pre><code>## Registered S3 methods overwritten by &#39;forecast&#39;:
-##   method             from    
-##   fitted.fracdiff    fracdiff
-##   residuals.fracdiff fracdiff</code></pre>
-<pre class="r"><code>library(tseries)</code></pre>
+library(forecast)
+library(tseries)</code></pre>
 <pre><code>## 
 ##     &#39;tseries&#39; version: 0.10-47
 ## 
@@ -579,59 +569,267 @@ Question2C1</code></pre>
 # The RMSE for Auto-arima model was lower. Thus I&#39;ve concluded that the Auto-arima 
 # is more accurate than the Simple Regression model.
 
-# #     Question 4 a
-# summary(FinalData)
-# cor(FinalData$CPI, FinalData$GDPC1)
-# RGDP = ts(FinalData$GDPC1, frequency = 4, start = c(1966,1,1))
-# options(scipen = 999)
-# VARselect(CPI, RGDP, lag.max = 4, type = &#39;const&#39;)
-# var = VAR(cbind(CPI, RGDP), p =1, type = &#39;const&#39;)
-# summary(var)
+# #     Fitting a Vector Autoregressive model using p = 1 (only one lag) with highly correated variable.
+summary(FinalData)</code></pre>
+<pre><code>##        DATE         GDPC1           FGOVTR             FFR          
+##  1/1/1966:  1   Min.   : 4407   Min.   :  98.69   Min.   : 0.07333  
+##  1/1/1967:  1   1st Qu.: 6722   1st Qu.: 311.39   1st Qu.: 2.05250  
+##  1/1/1968:  1   Median : 9685   Median : 640.37   Median : 5.24833  
+##  1/1/1969:  1   Mean   :10547   Mean   : 834.39   Mean   : 5.26140  
+##  1/1/1970:  1   3rd Qu.:14996   3rd Qu.:1291.31   3rd Qu.: 7.39833  
+##  1/1/1971:  1   Max.   :18784   Max.   :2042.91   Max.   :17.78000  
+##  (Other) :206                                                       
+##      NETEXP            MDOAH               CPI             DGS10       
+##  Min.   :-805.63   Min.   :  356093   Min.   : 32.05   Min.   : 1.564  
+##  1st Qu.:-499.99   1st Qu.: 1280304   1st Qu.: 70.85   1st Qu.: 4.271  
+##  Median :-102.88   Median : 4013639   Median :140.27   Median : 6.178  
+##  Mean   :-233.35   Mean   : 5904677   Mean   :136.95   Mean   : 6.347  
+##  3rd Qu.: -16.37   3rd Qu.:11831398   3rd Qu.:197.06   3rd Qu.: 7.952  
+##  Max.   :  21.58   Max.   :15440761   Max.   :252.76   Max.   :14.838  
+##                                                                        
+##      unrate             IP               PD        
+##  Min.   : 3.400   Min.   : 34.48   Min.   : 30.60  
+##  1st Qu.: 4.858   1st Qu.: 50.19   1st Qu.: 35.59  
+##  Median : 5.717   Median : 65.20   Median : 55.71  
+##  Mean   : 6.059   Mean   : 71.57   Mean   : 56.94  
+##  3rd Qu.: 7.208   3rd Qu.: 95.46   3rd Qu.: 64.25  
+##  Max.   :10.667   Max.   :110.32   Max.   :105.19  
+## </code></pre>
+<pre class="r"><code>cor(FinalData$CPI, FinalData$GDPC1)</code></pre>
+<pre><code>## [1] 0.9888602</code></pre>
+<pre class="r"><code># The CPI &amp; Real Gross Domestic Product has high correation.
 
-# #     Question 4 b
-# var1=irf(x=var, impulse=&quot;RGDP&quot;, boot=TRUE, n.ahead = 3)
-# var1
-# var2=irf(x=var, impulse=&quot;CPI&quot;, boot=TRUE, n.ahead = 3)
-# var2
+#       Modeling a Vector Autoregressive model
+RGDP = ts(FinalData$GDPC1, frequency = 4, start = c(1966,1,1))
+options(scipen = 999)
+#VARselect(CPI, RGDP, lag.max = 4, type = &#39;const&#39;)
+var = VAR(cbind(CPI, RGDP), p =1, type = &#39;const&#39;)
+summary(var)</code></pre>
+<pre><code>## 
+## VAR Estimation Results:
+## ========================= 
+## Endogenous variables: CPI, RGDP 
+## Deterministic variables: const 
+## Sample size: 211 
+## Log Likelihood: -1460.954 
+## Roots of the characteristic polynomial:
+## 1.001 0.9969
+## Call:
+## VAR(y = cbind(CPI, RGDP), p = 1, type = &quot;const&quot;)
+## 
+## 
+## Estimation results for equation CPI: 
+## ==================================== 
+## CPI = CPI.l1 + RGDP.l1 + const 
+## 
+##            Estimate  Std. Error t value             Pr(&gt;|t|)    
+## CPI.l1   1.00206479  0.00561307 178.523 &lt; 0.0000000000000002 ***
+## RGDP.l1 -0.00001474  0.00008886  -0.166                0.868    
+## const    0.91930934  0.21807148   4.216            0.0000371 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## 
+## Residual standard error: 0.8347 on 208 degrees of freedom
+## Multiple R-Squared: 0.9999,  Adjusted R-squared: 0.9999 
+## F-statistic: 7.138e+05 on 2 and 208 DF,  p-value: &lt; 0.00000000000000022 
+## 
+## 
+## Estimation results for equation RGDP: 
+## ===================================== 
+## RGDP = CPI.l1 + RGDP.l1 + const 
+## 
+##          Estimate Std. Error t value            Pr(&gt;|t|)    
+## CPI.l1   0.530866   0.490471   1.082              0.2803    
+## RGDP.l1  0.995367   0.007764 128.200 &lt;0.0000000000000002 ***
+## const   44.409423  19.055099   2.331              0.0207 *  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## 
+## Residual standard error: 72.94 on 208 degrees of freedom
+## Multiple R-Squared: 0.9997,  Adjusted R-squared: 0.9997 
+## F-statistic: 3.749e+05 on 2 and 208 DF,  p-value: &lt; 0.00000000000000022 
+## 
+## 
+## 
+## Covariance matrix of residuals:
+##         CPI     RGDP
+## CPI  0.6968    7.955
+## RGDP 7.9553 5320.233
+## 
+## Correlation matrix of residuals:
+##         CPI   RGDP
+## CPI  1.0000 0.1307
+## RGDP 0.1307 1.0000</code></pre>
+<pre class="r"><code>#               The responses up to 3 periods for both variables due to a one unit shock in each variable
+#       1 unit shock for GDP
+ var1=irf(x=var, impulse=&quot;RGDP&quot;, boot=TRUE, n.ahead = 3)
+ var1</code></pre>
+<pre><code>## 
+## Impulse response coefficients
+## $RGDP
+##               CPI     RGDP
+## [1,]  0.000000000 72.31464
+## [2,] -0.001066213 71.97958
+## [3,] -0.002129688 71.64552
+## [4,] -0.003190433 71.31243
+## 
+## 
+## Lower Band, CI= 0.95 
+## $RGDP
+##              CPI     RGDP
+## [1,]  0.00000000 60.12154
+## [2,] -0.01930724 59.76492
+## [3,] -0.03851747 58.05995
+## [4,] -0.05763668 55.44375
+## 
+## 
+## Upper Band, CI= 0.95 
+## $RGDP
+##             CPI     RGDP
+## [1,] 0.00000000 82.71595
+## [2,] 0.04199400 81.83716
+## [3,] 0.08093424 80.60303
+## [4,] 0.11705759 79.41672</code></pre>
+<pre class="r"><code> # It&#39;s clear that shock in the GDP will have little or no impact to the CPI
 
-# #     Question 5
-# fvar = forecast(var, h=3)
-# summary(fvar)
-# fvar
-# CPI_ARIMA_Forecast
-# accuracy(fvar, d=1, D=0)
-# # There is no seasonality, thus the code requires to put d =1 and D = 0. 
-# accuracy(CPI_ARIMA_Forecast)
-# # RMSE for the Var model was higher, thus ARIMA has higher accuracy. 
+#       1 unit shock for CPI       
+ var2=irf(x=var, impulse=&quot;CPI&quot;, boot=TRUE, n.ahead = 3)
+ var2</code></pre>
+<pre><code>## 
+## Impulse response coefficients
+## $CPI
+##            CPI     RGDP
+## [1,] 0.8347433  9.53028
+## [2,] 0.8363264  9.92926
+## [3,] 0.8379068 10.32723
+## [4,] 0.8394847 10.72420
+## 
+## 
+## Lower Band, CI= 0.95 
+## $CPI
+##            CPI      RGDP
+## [1,] 0.6371564 -12.40135
+## [2,] 0.6377880 -10.81001
+## [3,] 0.6295176  -9.27356
+## [4,] 0.6161490  -7.78998
+## 
+## 
+## Upper Band, CI= 0.95 
+## $CPI
+##           CPI     RGDP
+## [1,] 1.102478 41.30583
+## [2,] 1.101052 42.30355
+## [3,] 1.097831 43.25420
+## [4,] 1.094828 44.71936</code></pre>
+<pre class="r"><code># However, CPI&#39;s shock will impact the GDP.
 
-# #     Question 6
-# summary(FinalData)
-# FGOVTR = ts(FinalData$FGOVTR, frequency = 4, start = c(1966,1,1))
-# FFR = ts(FinalData$FFR, frequency = 4, start = c(1966,1,1))
-# NETEXP = ts(FinalData$NETEXP, frequency = 4, start = c(1966,1,1))
+#       Using AIC criteria to determine the optimal lags in the VAR and 
+#       generating forecast values for the assigned variable up to 3 periods forward
+ fvar = forecast(var, h=3) 
+ # This code has Error : Error in accuracy
+ # Needs to be Fixed in the future.
+ #summary(fvar, d=1,D=0)
+ 
+# 3 Point Forecast for CPI &amp; GDP from the Vector Autoregressive Model
+ fvar</code></pre>
+<pre><code>## CPI
+##         Point Forecast    Lo 80    Hi 80    Lo 95    Hi 95
+## 2019 Q1       253.9233 252.8535 254.9930 252.2872 255.5593
+## 2019 Q2       255.0886 253.5743 256.6029 252.7726 257.4045
+## 2019 Q3       256.2549 254.3985 258.1113 253.4158 259.0941
+## 
+## RGDP
+##         Point Forecast    Lo 80    Hi 80    Lo 95    Hi 95
+## 2019 Q1       18875.11 18781.63 18968.59 18732.15 19018.07
+## 2019 Q2       18966.86 18834.92 19098.81 18765.07 19168.65
+## 2019 Q3       19058.81 18897.52 19220.10 18812.14 19305.49</code></pre>
+<pre class="r"><code> # Auto.ARMA Model &amp; VAR model accuracy comparison
+accuracy(fvar, d=1, D=0)</code></pre>
+<pre><code>##                                          ME       RMSE        MAE
+## CPI Training set   0.0000000000000006735804  0.8287879  0.5443487
+## RGDP Training set -0.0000000000000301718563 72.4195392 50.9553132
+##                           MPE      MAPE      MASE      ACF1
+## CPI Training set  -0.08845486 0.5382390 0.4737548 0.3592322
+## RGDP Training set -0.01274135 0.5458977 0.6022113 0.3443815</code></pre>
+<pre class="r"><code># There is no seasonality, thus the code requires to put d =1 and D = 0. 
+accuracy(CPI_ARIMA_Forecast)</code></pre>
+<pre><code>##                       ME      RMSE       MAE         MPE      MAPE
+## Training set 0.003907738 0.7693755 0.4884155 -0.08925105 0.4603931
+##                   MASE         ACF1
+## Training set 0.1145306 -0.004847103</code></pre>
+<pre class="r"><code># RMSE for the Var model was higher, thus ARIMA has higher accuracy. 
 
-# MDOAH = ts(FinalData$MDOAH, frequency = 4, start = c(1966,1,1))
-# DGS10 = ts(FinalData$DGS10, frequency = 4, start = c(1966,1,1))
-# unrate = ts(FinalData$unrate, frequency = 4, start = c(1966,1,1))
-# IP = ts(FinalData$IP, frequency = 4, start = c(1966,1,1))
-# PD = ts(FinalData$PD, frequency = 4, start = c(1966,1,1))
+#     Adding a principal component with all of the variables
+FGOVTR = ts(FinalData$FGOVTR, frequency = 4, start = c(1966,1,1))
+FFR = ts(FinalData$FFR, frequency = 4, start = c(1966,1,1))
+NETEXP = ts(FinalData$NETEXP, frequency = 4, start = c(1966,1,1))
 
-# pca = prcomp(cbind(RGDP,FGOVTR,FFR,NETEXP,MDOAH,DGS10,unrate, IP, PD))
-# summary(pca)
-# plot(pca$x[,1])
-# pc = ts(pca$x[,1], frequency = 4, start = c(1966,1,1))
-# summary(pc)
-# plot(pc)
-# # going back to problem 5
-# var3 = VAR(cbind(CPI, pc), p =1, type = &#39;const&#39;)
-# fvar2 = forecast(var3, h =3)
-# autoplot(fvar2)
-# fvar2
-# # Comparing the accuracy
-# accuracy(fvar2,d=1, D=0)
-# accuracy(fvar,d=1, D=0)
-# #The RMSE for the principle component RMSE is lower.
-# #Thus, it&#39;s preferrable to use the model with the PC component</code></pre>
+MDOAH = ts(FinalData$MDOAH, frequency = 4, start = c(1966,1,1))
+DGS10 = ts(FinalData$DGS10, frequency = 4, start = c(1966,1,1))
+unrate = ts(FinalData$unrate, frequency = 4, start = c(1966,1,1))
+IP = ts(FinalData$IP, frequency = 4, start = c(1966,1,1))
+PD = ts(FinalData$PD, frequency = 4, start = c(1966,1,1))
+
+pca = prcomp(cbind(RGDP,FGOVTR,FFR,NETEXP,MDOAH,DGS10,unrate, IP, PD))
+#       This is the principal component of the all of the values excpet CPI.
+summary(pca)</code></pre>
+<pre><code>## Importance of components:
+##                            PC1  PC2   PC3   PC4   PC5   PC6   PC7   PC8
+## Standard deviation     5267381 1084 107.4 85.63 6.723 2.803 1.941 1.342
+## Proportion of Variance       1    0   0.0  0.00 0.000 0.000 0.000 0.000
+## Cumulative Proportion        1    1   1.0  1.00 1.000 1.000 1.000 1.000
+##                           PC9
+## Standard deviation     0.5789
+## Proportion of Variance 0.0000
+## Cumulative Proportion  1.0000</code></pre>
+<pre class="r"><code>plot(pca$x[,1])</code></pre>
+<p><img src="project_files/figure-html/unnamed-chunk-1-12.png" width="672" /></p>
+<pre class="r"><code>pc = ts(pca$x[,1], frequency = 4, start = c(1966,1,1))
+summary(pc)</code></pre>
+<pre><code>##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+## -5548587 -4624375 -1891038        0  5926723  9536088</code></pre>
+<pre class="r"><code>plot(pc)</code></pre>
+<p><img src="project_files/figure-html/unnamed-chunk-1-13.png" width="672" /></p>
+<pre class="r"><code>#        Forecasting with PC componenet model. 
+var3 = VAR(cbind(CPI, pc), p =1, type = &#39;const&#39;)
+fvar2 = forecast(var3, h =3)
+autoplot(fvar2)</code></pre>
+<p><img src="project_files/figure-html/unnamed-chunk-1-14.png" width="672" /></p>
+<pre class="r"><code>fvar2</code></pre>
+<pre><code>## CPI
+##         Point Forecast    Lo 80    Hi 80    Lo 95    Hi 95
+## 2019 Q1       253.8980 252.8307 254.9653 252.2657 255.5303
+## 2019 Q2       255.0371 253.5255 256.5487 252.7254 257.3489
+## 2019 Q3       256.1764 254.3224 258.0304 253.3409 259.0118
+## 
+## pc
+##         Point Forecast   Lo 80    Hi 80   Lo 95    Hi 95
+## 2019 Q1        9653725 9528440  9779010 9462118  9845332
+## 2019 Q2        9771659 9594936  9948382 9501385 10041933
+## 2019 Q3        9889889 9674003 10105774 9559720 10220057</code></pre>
+<pre class="r"><code># The Vector Autoregressive model with Principal component suggest that
+# For first quarter of 2019, the CPI will be 253.8980. 
+# The exact meaning of the Principal component is hard to interpert. 
+
+#       Comparing the accuracy
+accuracy(fvar2,d=1, D=0)</code></pre>
+<pre><code>##                                         ME          RMSE           MAE
+## CPI Training set -0.0000000000000008418657     0.8268766     0.5443384
+## pc Training set   0.0000000000217839816749 97062.9507340 59700.3713457
+##                         MPE      MAPE      MASE      ACF1
+## CPI Training set -0.0755122 0.5244213 0.4737458 0.3555163
+## pc Training set   0.6037213 2.6126501 0.6971980 0.9424168</code></pre>
+<pre class="r"><code>accuracy(fvar,d=1, D=0)</code></pre>
+<pre><code>##                                          ME       RMSE        MAE
+## CPI Training set   0.0000000000000006735804  0.8287879  0.5443487
+## RGDP Training set -0.0000000000000301718563 72.4195392 50.9553132
+##                           MPE      MAPE      MASE      ACF1
+## CPI Training set  -0.08845486 0.5382390 0.4737548 0.3592322
+## RGDP Training set -0.01274135 0.5458977 0.6022113 0.3443815</code></pre>
+<pre class="r"><code>#The RMSE for the principle component RMSE is lower.
+#Thus, it&#39;s preferrable to use the model with the PC component</code></pre>
 
 
 
