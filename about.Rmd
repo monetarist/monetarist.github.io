@@ -5,4 +5,4 @@ title: "About me"
 ## This is me
 
 Hi, My name is Yeongjun Oh and this is my website.
-I am a Economics & Actuarial Math major at Rutgers University.
+I majoring in Economics at Rutgers University

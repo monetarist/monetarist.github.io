@@ -338,41 +338,14 @@ $(document).ready(function () {
 </div>
 
 
-<pre class="r"><code>library(vars)</code></pre>
-<pre><code>## Loading required package: MASS</code></pre>
-<pre><code>## Loading required package: strucchange</code></pre>
-<pre><code>## Loading required package: zoo</code></pre>
-<pre><code>## 
-## Attaching package: &#39;zoo&#39;</code></pre>
-<pre><code>## The following objects are masked from &#39;package:base&#39;:
-## 
-##     as.Date, as.Date.numeric</code></pre>
-<pre><code>## Loading required package: sandwich</code></pre>
-<pre><code>## Loading required package: urca</code></pre>
-<pre><code>## Loading required package: lmtest</code></pre>
-<pre class="r"><code>library(dplyr)</code></pre>
-<pre><code>## 
-## Attaching package: &#39;dplyr&#39;</code></pre>
-<pre><code>## The following object is masked from &#39;package:MASS&#39;:
-## 
-##     select</code></pre>
-<pre><code>## The following objects are masked from &#39;package:stats&#39;:
-## 
-##     filter, lag</code></pre>
-<pre><code>## The following objects are masked from &#39;package:base&#39;:
-## 
-##     intersect, setdiff, setequal, union</code></pre>
-<pre class="r"><code>library(ggplot2)
+<pre class="r"><code>library(vars)
+library(dplyr)
+library(ggplot2)
 library(forecast)
-library(tseries)</code></pre>
-<pre><code>## 
-##     &#39;tseries&#39; version: 0.10-47
-## 
-##     &#39;tseries&#39; is a package for time series analysis and
-##     computational finance.
-## 
-##     See &#39;library(help=&quot;tseries&quot;)&#39; for details.</code></pre>
-<pre class="r"><code>FinalData = read.csv(file.choose(), header = TRUE)
+library(tseries)
+
+
+FinalData = read.csv(file.choose(), header = TRUE)
 # Following is the explanation for the variables. 
 # GDPC1 is the Real Gross Domestic Product quarterly data.
 # FGOVTR is the Federal Government Tax Receipts quarterly data.
@@ -679,19 +652,19 @@ summary(var)</code></pre>
 ## Lower Band, CI= 0.95 
 ## $RGDP
 ##              CPI     RGDP
-## [1,]  0.00000000 60.12154
-## [2,] -0.01930724 59.76492
-## [3,] -0.03851747 58.05995
-## [4,] -0.05763668 55.44375
+## [1,]  0.00000000 59.83597
+## [2,] -0.01672205 58.21722
+## [3,] -0.03307462 54.92266
+## [4,] -0.04907147 52.71046
 ## 
 ## 
 ## Upper Band, CI= 0.95 
 ## $RGDP
 ##             CPI     RGDP
-## [1,] 0.00000000 82.71595
-## [2,] 0.04199400 81.83716
-## [3,] 0.08093424 80.60303
-## [4,] 0.11705759 79.41672</code></pre>
+## [1,] 0.00000000 81.40697
+## [2,] 0.03865599 80.00413
+## [3,] 0.07390801 78.66655
+## [4,] 0.10653671 77.36300</code></pre>
 <pre class="r"><code> # It&#39;s clear that shock in the GDP will have little or no impact to the CPI
 
 #       1 unit shock for CPI       
@@ -710,19 +683,19 @@ summary(var)</code></pre>
 ## Lower Band, CI= 0.95 
 ## $CPI
 ##            CPI      RGDP
-## [1,] 0.6371564 -12.40135
-## [2,] 0.6377880 -10.81001
-## [3,] 0.6295176  -9.27356
-## [4,] 0.6161490  -7.78998
+## [1,] 0.6546148 -16.49669
+## [2,] 0.6528545 -15.39378
+## [3,] 0.6511469 -13.76087
+## [4,] 0.6484658 -12.46194
 ## 
 ## 
 ## Upper Band, CI= 0.95 
 ## $CPI
 ##           CPI     RGDP
-## [1,] 1.102478 41.30583
-## [2,] 1.101052 42.30355
-## [3,] 1.097831 43.25420
-## [4,] 1.094828 44.71936</code></pre>
+## [1,] 1.081163 37.53258
+## [2,] 1.083522 38.07264
+## [3,] 1.081819 38.60474
+## [4,] 1.078935 39.12910</code></pre>
 <pre class="r"><code># However, CPI&#39;s shock will impact the GDP.
 
 #       Using AIC criteria to determine the optimal lags in the VAR and 
