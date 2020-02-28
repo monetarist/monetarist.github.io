@@ -338,41 +338,14 @@ $(document).ready(function () {
 </div>
 
 
-<pre class="r"><code>library(vars)</code></pre>
-<pre><code>## Loading required package: MASS</code></pre>
-<pre><code>## Loading required package: strucchange</code></pre>
-<pre><code>## Loading required package: zoo</code></pre>
-<pre><code>## 
-## Attaching package: &#39;zoo&#39;</code></pre>
-<pre><code>## The following objects are masked from &#39;package:base&#39;:
-## 
-##     as.Date, as.Date.numeric</code></pre>
-<pre><code>## Loading required package: sandwich</code></pre>
-<pre><code>## Loading required package: urca</code></pre>
-<pre><code>## Loading required package: lmtest</code></pre>
-<pre class="r"><code>library(dplyr)</code></pre>
-<pre><code>## 
-## Attaching package: &#39;dplyr&#39;</code></pre>
-<pre><code>## The following object is masked from &#39;package:MASS&#39;:
-## 
-##     select</code></pre>
-<pre><code>## The following objects are masked from &#39;package:stats&#39;:
-## 
-##     filter, lag</code></pre>
-<pre><code>## The following objects are masked from &#39;package:base&#39;:
-## 
-##     intersect, setdiff, setequal, union</code></pre>
-<pre class="r"><code>library(ggplot2)
+<pre class="r"><code>library(vars)
+library(dplyr)
+library(ggplot2)
 library(forecast)
-library(tseries)</code></pre>
-<pre><code>## 
-##     &#39;tseries&#39; version: 0.10-47
-## 
-##     &#39;tseries&#39; is a package for time series analysis and
-##     computational finance.
-## 
-##     See &#39;library(help=&quot;tseries&quot;)&#39; for details.</code></pre>
-<pre class="r"><code>FinalData = read.csv(file.choose(), header = TRUE)
+library(tseries)
+
+
+FinalData = read.csv(file.choose(), header = TRUE)
 # Following is the explanation for the variables. 
 # GDPC1 is the Real Gross Domestic Product quarterly data.
 # FGOVTR is the Federal Government Tax Receipts quarterly data.
@@ -530,18 +503,18 @@ Question2C1</code></pre>
 ## -9.4006 -2.5182  0.6727  2.7547 13.5339 
 ## 
 ## Coefficients:
-##              Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept) 17.389368   0.791456  21.971   &lt;2e-16 ***
-## trend        1.123358   0.004908 228.869   &lt;2e-16 ***
-## season2     -0.058276   0.849478  -0.069    0.945    
-## season3     -0.022457   0.849521  -0.026    0.979    
-## season4     -0.210368   0.849591  -0.248    0.805    
+##              Estimate Std. Error t value            Pr(&gt;|t|)    
+## (Intercept) 17.389368   0.791456  21.971 &lt;0.0000000000000002 ***
+## trend        1.123358   0.004908 228.869 &lt;0.0000000000000002 ***
+## season2     -0.058276   0.849478  -0.069               0.945    
+## season3     -0.022457   0.849521  -0.026               0.979    
+## season4     -0.210368   0.849591  -0.248               0.805    
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
 ## Residual standard error: 4.373 on 207 degrees of freedom
 ## Multiple R-squared:  0.9961, Adjusted R-squared:  0.996 
-## F-statistic: 1.31e+04 on 4 and 207 DF,  p-value: &lt; 2.2e-16</code></pre>
+## F-statistic: 1.31e+04 on 4 and 207 DF,  p-value: &lt; 0.00000000000000022</code></pre>
 <pre class="r"><code> # Compared to first quarter, season 2 and 3 is expected to be slightly lower than the trend. 
  # The low coefficient for season 2 and 3 indicate the seasonality is weak or doesn&#39;t exist.
  # The high p-value for the seasons indicate that there is no seasonality. 
@@ -556,10 +529,10 @@ Question2C1</code></pre>
 ## 2019 Q3       258.8888 253.1732 264.6044 250.1242 267.6534</code></pre>
 <pre class="r"><code> #     Comparing accuracy of Regression &amp; ARIMA error structure model
  accuracy(CPIRegressionForecast, d =1, D =0)</code></pre>
-<pre><code>##                         ME     RMSE      MAE       MPE     MAPE     MASE
-## Training set -9.723207e-16 4.321008 3.361012 0.1059919 4.877736 2.925139
-##                   ACF1
-## Training set 0.9570962</code></pre>
+<pre><code>##                                     ME     RMSE      MAE       MPE
+## Training set -0.0000000000000009723207 4.321008 3.361012 0.1059919
+##                  MAPE     MASE      ACF1
+## Training set 4.877736 2.925139 0.9570962</code></pre>
 <pre class="r"><code> accuracy(fcast, d =1 , D=0)</code></pre>
 <pre><code>##                       ME      RMSE       MAE      MPE      MAPE      MASE
 ## Training set -0.03736094 0.7678488 0.4978913 -0.16188 0.4998526 0.4333221
@@ -678,20 +651,20 @@ summary(var)</code></pre>
 ## 
 ## Lower Band, CI= 0.95 
 ## $RGDP
-##              CPI     RGDP
-## [1,]  0.00000000 59.83597
-## [2,] -0.01672205 58.21722
-## [3,] -0.03307462 54.92266
-## [4,] -0.04907147 52.71046
+##               CPI     RGDP
+## [1,]  0.000000000 59.50523
+## [2,] -0.009388166 57.75120
+## [3,] -0.018646986 56.12833
+## [4,] -0.027778907 54.55962
 ## 
 ## 
 ## Upper Band, CI= 0.95 
 ## $RGDP
 ##             CPI     RGDP
-## [1,] 0.00000000 81.40697
-## [2,] 0.03865599 80.00413
-## [3,] 0.07390801 78.66655
-## [4,] 0.10653671 77.36300</code></pre>
+## [1,] 0.00000000 79.94121
+## [2,] 0.03116265 77.65325
+## [3,] 0.06105396 76.57384
+## [4,] 0.08973284 75.72608</code></pre>
 <pre class="r"><code> # It&#39;s clear that shock in the GDP will have little or no impact to the CPI
 
 #       1 unit shock for CPI       
@@ -710,19 +683,19 @@ summary(var)</code></pre>
 ## Lower Band, CI= 0.95 
 ## $CPI
 ##            CPI      RGDP
-## [1,] 0.6546148 -16.49669
-## [2,] 0.6528545 -15.39378
-## [3,] 0.6511469 -13.76087
-## [4,] 0.6484658 -12.46194
+## [1,] 0.6402971 -14.78426
+## [2,] 0.6323068 -13.56134
+## [3,] 0.6317192 -12.41769
+## [4,] 0.6298691 -11.50798
 ## 
 ## 
 ## Upper Band, CI= 0.95 
 ## $CPI
 ##           CPI     RGDP
-## [1,] 1.081163 37.53258
-## [2,] 1.083522 38.07264
-## [3,] 1.081819 38.60474
-## [4,] 1.078935 39.12910</code></pre>
+## [1,] 1.080596 39.69989
+## [2,] 1.080499 40.45230
+## [3,] 1.080434 41.16777
+## [4,] 1.078305 41.84896</code></pre>
 <pre class="r"><code># However, CPI&#39;s shock will impact the GDP.
 
 #       Using AIC criteria to determine the optimal lags in the VAR and 

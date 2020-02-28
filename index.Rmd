@@ -2,7 +2,14 @@
 title: "Welcome to my website!"
 ---
 
-##
+This is the Home Page of my Website. If you want to know about me, Check out About page. You can also check out my R project. Or my Resume.
 
-This website has my quantiative project and my resume!
-Thank you for checking out my website!
+Thank you for checking out my website! And here is a Cat video for your troubles B)
+
+```{r}
+#Random R code for the GIF
+```
+
+
+![CAT GIF](https://media.giphy.com/media/lJNoBCvQYp7nq/giphy.gif)
+
