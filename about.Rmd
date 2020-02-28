@@ -5,4 +5,11 @@ title: "About me"
 ## This is me
 
 Hi, My name is Yeongjun Oh and this is my website.
-I majoring in Economics at Rutgers University
+I'm majoring in Economics at Rutgers University with a minor in Math. I'm an undergraduate member of ODE, the international economics honor society and the Rutgers Economics Society. My passion is data analytics specifically forecasting. This website includes the CPI forecasting model, which is one of my proudest projects.
+My hobby is reading a book! 'Why Nations Fail' & 'No More Mr. Nice Guy' was one of the best books I've ever read. I strongly recommend these books. I've decided to major in Economics after I read 'Why Nations Fail' & I invigorated myself by reading 'No More Mr. Nice Guy'. My favorite PodCast is Dan Carlin's Hard Core History because I love history! 
+
+```{r}
+# some R code to upload my picture.
+```
+
+![This is me](mypicture.jpg)
