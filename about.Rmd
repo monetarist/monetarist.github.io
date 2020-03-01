@@ -5,8 +5,23 @@ title: "About me"
 ## This is me
 
 Hi, My name is Yeongjun Oh and this is my website.
-I'm majoring in Economics at Rutgers University with a minor in Math. I'm an undergraduate member of ODE, the international economics honor society and the Rutgers Economics Society. My passion is data analytics specifically forecasting. This website includes the CPI forecasting model, which is one of my proudest projects.
-My hobby is reading a book! 'Why Nations Fail' & 'No More Mr. Nice Guy' was one of the best books I've ever read. I strongly recommend these books. I've decided to major in Economics after I read 'Why Nations Fail' & I invigorated myself by reading 'No More Mr. Nice Guy'. My favorite PodCast is Dan Carlin's Hard Core History because I love history! 
+I'm majoring in Economics at Rutgers University with a minor in Math. I'm an undergraduate member of ODE, the international economics honor society and the Rutgers Economics Society. My passion is data analytics specifically forecasting. My overall objective is to solve real-world problems with technology and analytics that impact peoples lives in a positive way. I am currently proficient in R (this website is created by R!!), Google Sheets(Google Apps Script, Pivot table, V-lookup), SQL, Excel (VBA, Pivot table, V-lookup), and Java.
+
+
+For more Inforation, please check out my LinkedIn!
+[YeongJun Oh's LinkedIn](https://www.linkedin.com/in/yeongjun-oh/)
+
+
+Or if you want to contact me just click the "Contact me button" at the top right. 
+
+
+
+
+
+<font size="5"> Too Much Information </font>
+
+
+My hobby is reading books! 'Why Nations Fail' & 'A Random Walk Down Wall Street' were one of the best books I've ever read. I strongly recommend these books. I've decided to major in Economics after I read 'Why Nations Fail' & I got interested in investing by reading 'A Random Walk Down Wall Street'. If anyone wants to have a comfortable retirement, I highly recommend this book.My favorite PodCast is Dan Carlin's Hard Core History because I love history! 
 
 ```{r}
 # some R code to upload my picture.

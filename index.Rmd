@@ -2,9 +2,12 @@
 title: "Welcome to my website!"
 ---
 
-This is the Home Page of my Website. If you want to know about me, Check out About page. You can also check out my R project. Or my Resume.
+This is the Home Page of my Website. If you want to know about me, Check out About page. You can also check out my R project. Or my Resume. The resume page is still under construction. Thank you for checking out my website! 
 
-Thank you for checking out my website! And here is a Cat video for your troubles B)
+<div style="margin-bottom:300px;">
+</div>
+
+Here is a Cat video for your troubles B)
 
 ```{r}
 #Random R code for the GIF
