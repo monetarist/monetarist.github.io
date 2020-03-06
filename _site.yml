@@ -26,6 +26,8 @@ navbar:
     - text: "GitHub"
       icon: fa-github
       href: https://github.com/monetarist/monetarist.github.io
+    - text: ""
+      href: GA_Script.html
 output:
   html_document:
     theme: cosmo
