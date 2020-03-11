@@ -2,6 +2,5 @@
 title: "Project"
 ---
 
-
 ```{r, code = readLines("FinalExam.R")}
 ```

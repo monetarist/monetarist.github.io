@@ -358,29 +358,21 @@ FinalData = read.csv(file.choose(), header = TRUE)
 # PD is the Public Debt quarterly data.
 
 summary(FinalData)</code></pre>
-<pre><code>##        DATE         GDPC1           FGOVTR             FFR          
-##  1/1/1966:  1   Min.   : 4407   Min.   :  98.69   Min.   : 0.07333  
-##  1/1/1967:  1   1st Qu.: 6722   1st Qu.: 311.39   1st Qu.: 2.05250  
-##  1/1/1968:  1   Median : 9685   Median : 640.37   Median : 5.24833  
-##  1/1/1969:  1   Mean   :10547   Mean   : 834.39   Mean   : 5.26140  
-##  1/1/1970:  1   3rd Qu.:14996   3rd Qu.:1291.31   3rd Qu.: 7.39833  
-##  1/1/1971:  1   Max.   :18784   Max.   :2042.91   Max.   :17.78000  
-##  (Other) :206                                                       
-##      NETEXP            MDOAH               CPI             DGS10       
-##  Min.   :-805.63   Min.   :  356093   Min.   : 32.05   Min.   : 1.564  
-##  1st Qu.:-499.99   1st Qu.: 1280304   1st Qu.: 70.85   1st Qu.: 4.271  
-##  Median :-102.88   Median : 4013639   Median :140.27   Median : 6.178  
-##  Mean   :-233.35   Mean   : 5904677   Mean   :136.95   Mean   : 6.347  
-##  3rd Qu.: -16.37   3rd Qu.:11831398   3rd Qu.:197.06   3rd Qu.: 7.952  
-##  Max.   :  21.58   Max.   :15440761   Max.   :252.76   Max.   :14.838  
-##                                                                        
-##      unrate             IP               PD        
-##  Min.   : 3.400   Min.   : 34.48   Min.   : 30.60  
-##  1st Qu.: 4.858   1st Qu.: 50.19   1st Qu.: 35.59  
-##  Median : 5.717   Median : 65.20   Median : 55.71  
-##  Mean   : 6.059   Mean   : 71.57   Mean   : 56.94  
-##  3rd Qu.: 7.208   3rd Qu.: 95.46   3rd Qu.: 64.25  
-##  Max.   :10.667   Max.   :110.32   Max.   :105.19  
+<pre><code>##        DATE         GDPC1           FGOVTR             FFR               NETEXP            MDOAH         
+##  1/1/1966:  1   Min.   : 4407   Min.   :  98.69   Min.   : 0.07333   Min.   :-805.63   Min.   :  356093  
+##  1/1/1967:  1   1st Qu.: 6722   1st Qu.: 311.39   1st Qu.: 2.05250   1st Qu.:-499.99   1st Qu.: 1280304  
+##  1/1/1968:  1   Median : 9685   Median : 640.37   Median : 5.24833   Median :-102.88   Median : 4013639  
+##  1/1/1969:  1   Mean   :10547   Mean   : 834.39   Mean   : 5.26140   Mean   :-233.35   Mean   : 5904677  
+##  1/1/1970:  1   3rd Qu.:14996   3rd Qu.:1291.31   3rd Qu.: 7.39833   3rd Qu.: -16.37   3rd Qu.:11831398  
+##  1/1/1971:  1   Max.   :18784   Max.   :2042.91   Max.   :17.78000   Max.   :  21.58   Max.   :15440761  
+##  (Other) :206                                                                                            
+##       CPI             DGS10            unrate             IP               PD        
+##  Min.   : 32.05   Min.   : 1.564   Min.   : 3.400   Min.   : 34.48   Min.   : 30.60  
+##  1st Qu.: 70.85   1st Qu.: 4.271   1st Qu.: 4.858   1st Qu.: 50.19   1st Qu.: 35.59  
+##  Median :140.27   Median : 6.178   Median : 5.717   Median : 65.20   Median : 55.71  
+##  Mean   :136.95   Mean   : 6.347   Mean   : 6.059   Mean   : 71.57   Mean   : 56.94  
+##  3rd Qu.:197.06   3rd Qu.: 7.952   3rd Qu.: 7.208   3rd Qu.: 95.46   3rd Qu.: 64.25  
+##  Max.   :252.76   Max.   :14.838   Max.   :10.667   Max.   :110.32   Max.   :105.19  
 ## </code></pre>
 <pre class="r"><code>CPI = ts(FinalData$CPI, frequency = 4, start = c(1966,1,1))
 
@@ -529,44 +521,32 @@ Question2C1</code></pre>
 ## 2019 Q3       258.8888 253.1732 264.6044 250.1242 267.6534</code></pre>
 <pre class="r"><code> #     Comparing accuracy of Regression &amp; ARIMA error structure model
  accuracy(CPIRegressionForecast, d =1, D =0)</code></pre>
-<pre><code>##                                     ME     RMSE      MAE       MPE
-## Training set -0.0000000000000009723207 4.321008 3.361012 0.1059919
-##                  MAPE     MASE      ACF1
-## Training set 4.877736 2.925139 0.9570962</code></pre>
+<pre><code>##                                     ME     RMSE      MAE       MPE     MAPE     MASE      ACF1
+## Training set -0.0000000000000009723207 4.321008 3.361012 0.1059919 4.877736 2.925139 0.9570962</code></pre>
 <pre class="r"><code> accuracy(fcast, d =1 , D=0)</code></pre>
-<pre><code>##                       ME      RMSE       MAE      MPE      MAPE      MASE
-## Training set -0.03736094 0.7678488 0.4978913 -0.16188 0.4998526 0.4333221
-##                      ACF1
-## Training set -0.004795397</code></pre>
+<pre><code>##                       ME      RMSE       MAE      MPE      MAPE      MASE         ACF1
+## Training set -0.03736094 0.7678488 0.4978913 -0.16188 0.4998526 0.4333221 -0.004795397</code></pre>
 <pre class="r"><code># d =1 &amp; D =0 is the default. The default will be used throughout the project for consistency.
 # The RMSE for Auto-arima model was lower. Thus I&#39;ve concluded that the Auto-arima 
 # is more accurate than the Simple Regression model.
 
 # #     Fitting a Vector Autoregressive model using p = 1 (only one lag) with highly correated variable.
 summary(FinalData)</code></pre>
-<pre><code>##        DATE         GDPC1           FGOVTR             FFR          
-##  1/1/1966:  1   Min.   : 4407   Min.   :  98.69   Min.   : 0.07333  
-##  1/1/1967:  1   1st Qu.: 6722   1st Qu.: 311.39   1st Qu.: 2.05250  
-##  1/1/1968:  1   Median : 9685   Median : 640.37   Median : 5.24833  
-##  1/1/1969:  1   Mean   :10547   Mean   : 834.39   Mean   : 5.26140  
-##  1/1/1970:  1   3rd Qu.:14996   3rd Qu.:1291.31   3rd Qu.: 7.39833  
-##  1/1/1971:  1   Max.   :18784   Max.   :2042.91   Max.   :17.78000  
-##  (Other) :206                                                       
-##      NETEXP            MDOAH               CPI             DGS10       
-##  Min.   :-805.63   Min.   :  356093   Min.   : 32.05   Min.   : 1.564  
-##  1st Qu.:-499.99   1st Qu.: 1280304   1st Qu.: 70.85   1st Qu.: 4.271  
-##  Median :-102.88   Median : 4013639   Median :140.27   Median : 6.178  
-##  Mean   :-233.35   Mean   : 5904677   Mean   :136.95   Mean   : 6.347  
-##  3rd Qu.: -16.37   3rd Qu.:11831398   3rd Qu.:197.06   3rd Qu.: 7.952  
-##  Max.   :  21.58   Max.   :15440761   Max.   :252.76   Max.   :14.838  
-##                                                                        
-##      unrate             IP               PD        
-##  Min.   : 3.400   Min.   : 34.48   Min.   : 30.60  
-##  1st Qu.: 4.858   1st Qu.: 50.19   1st Qu.: 35.59  
-##  Median : 5.717   Median : 65.20   Median : 55.71  
-##  Mean   : 6.059   Mean   : 71.57   Mean   : 56.94  
-##  3rd Qu.: 7.208   3rd Qu.: 95.46   3rd Qu.: 64.25  
-##  Max.   :10.667   Max.   :110.32   Max.   :105.19  
+<pre><code>##        DATE         GDPC1           FGOVTR             FFR               NETEXP            MDOAH         
+##  1/1/1966:  1   Min.   : 4407   Min.   :  98.69   Min.   : 0.07333   Min.   :-805.63   Min.   :  356093  
+##  1/1/1967:  1   1st Qu.: 6722   1st Qu.: 311.39   1st Qu.: 2.05250   1st Qu.:-499.99   1st Qu.: 1280304  
+##  1/1/1968:  1   Median : 9685   Median : 640.37   Median : 5.24833   Median :-102.88   Median : 4013639  
+##  1/1/1969:  1   Mean   :10547   Mean   : 834.39   Mean   : 5.26140   Mean   :-233.35   Mean   : 5904677  
+##  1/1/1970:  1   3rd Qu.:14996   3rd Qu.:1291.31   3rd Qu.: 7.39833   3rd Qu.: -16.37   3rd Qu.:11831398  
+##  1/1/1971:  1   Max.   :18784   Max.   :2042.91   Max.   :17.78000   Max.   :  21.58   Max.   :15440761  
+##  (Other) :206                                                                                            
+##       CPI             DGS10            unrate             IP               PD        
+##  Min.   : 32.05   Min.   : 1.564   Min.   : 3.400   Min.   : 34.48   Min.   : 30.60  
+##  1st Qu.: 70.85   1st Qu.: 4.271   1st Qu.: 4.858   1st Qu.: 50.19   1st Qu.: 35.59  
+##  Median :140.27   Median : 6.178   Median : 5.717   Median : 65.20   Median : 55.71  
+##  Mean   :136.95   Mean   : 6.347   Mean   : 6.059   Mean   : 71.57   Mean   : 56.94  
+##  3rd Qu.:197.06   3rd Qu.: 7.952   3rd Qu.: 7.208   3rd Qu.: 95.46   3rd Qu.: 64.25  
+##  Max.   :252.76   Max.   :14.838   Max.   :10.667   Max.   :110.32   Max.   :105.19  
 ## </code></pre>
 <pre class="r"><code>cor(FinalData$CPI, FinalData$GDPC1)</code></pre>
 <pre><code>## [1] 0.9888602</code></pre>
@@ -651,20 +631,20 @@ summary(var)</code></pre>
 ## 
 ## Lower Band, CI= 0.95 
 ## $RGDP
-##               CPI     RGDP
-## [1,]  0.000000000 59.50523
-## [2,] -0.009388166 57.75120
-## [3,] -0.018646986 56.12833
-## [4,] -0.027778907 54.55962
+##              CPI     RGDP
+## [1,]  0.00000000 58.35765
+## [2,] -0.01086322 56.93540
+## [3,] -0.02142518 54.96288
+## [4,] -0.03169662 52.32685
 ## 
 ## 
 ## Upper Band, CI= 0.95 
 ## $RGDP
 ##             CPI     RGDP
-## [1,] 0.00000000 79.94121
-## [2,] 0.03116265 77.65325
-## [3,] 0.06105396 76.57384
-## [4,] 0.08973284 75.72608</code></pre>
+## [1,] 0.00000000 80.90063
+## [2,] 0.02814008 79.04487
+## [3,] 0.05496144 75.91847
+## [4,] 0.08004606 74.85895</code></pre>
 <pre class="r"><code> # It&#39;s clear that shock in the GDP will have little or no impact to the CPI
 
 #       1 unit shock for CPI       
@@ -683,19 +663,19 @@ summary(var)</code></pre>
 ## Lower Band, CI= 0.95 
 ## $CPI
 ##            CPI      RGDP
-## [1,] 0.6402971 -14.78426
-## [2,] 0.6323068 -13.56134
-## [3,] 0.6317192 -12.41769
-## [4,] 0.6298691 -11.50798
+## [1,] 0.6392761 -14.03146
+## [2,] 0.6341456 -12.55869
+## [3,] 0.6257411 -11.28059
+## [4,] 0.6150503 -10.22410
 ## 
 ## 
 ## Upper Band, CI= 0.95 
 ## $CPI
 ##           CPI     RGDP
-## [1,] 1.080596 39.69989
-## [2,] 1.080499 40.45230
-## [3,] 1.080434 41.16777
-## [4,] 1.078305 41.84896</code></pre>
+## [1,] 1.027127 35.63701
+## [2,] 1.031206 36.50946
+## [3,] 1.035195 37.36196
+## [4,] 1.039597 38.71131</code></pre>
 <pre class="r"><code># However, CPI&#39;s shock will impact the GDP.
 
 #       Using AIC criteria to determine the optimal lags in the VAR and 
@@ -720,18 +700,16 @@ summary(var)</code></pre>
 ## 2019 Q3       19058.81 18897.52 19220.10 18812.14 19305.49</code></pre>
 <pre class="r"><code> # Auto.ARMA Model &amp; VAR model accuracy comparison
 accuracy(fvar, d=1, D=0)</code></pre>
-<pre><code>##                                          ME       RMSE        MAE
-## CPI Training set   0.0000000000000006735804  0.8287879  0.5443487
-## RGDP Training set -0.0000000000000301718563 72.4195392 50.9553132
-##                           MPE      MAPE      MASE      ACF1
-## CPI Training set  -0.08845486 0.5382390 0.4737548 0.3592322
-## RGDP Training set -0.01274135 0.5458977 0.6022113 0.3443815</code></pre>
+<pre><code>##                                          ME       RMSE        MAE         MPE      MAPE      MASE
+## CPI Training set   0.0000000000000006735804  0.8287879  0.5443487 -0.08845486 0.5382390 0.4737548
+## RGDP Training set -0.0000000000000301718563 72.4195392 50.9553132 -0.01274135 0.5458977 0.6022113
+##                        ACF1
+## CPI Training set  0.3592322
+## RGDP Training set 0.3443815</code></pre>
 <pre class="r"><code># There is no seasonality, thus the code requires to put d =1 and D = 0. 
 accuracy(CPI_ARIMA_Forecast)</code></pre>
-<pre><code>##                       ME      RMSE       MAE         MPE      MAPE
-## Training set 0.003907738 0.7693755 0.4884155 -0.08925105 0.4603931
-##                   MASE         ACF1
-## Training set 0.1145306 -0.004847103</code></pre>
+<pre><code>##                       ME      RMSE       MAE         MPE      MAPE      MASE         ACF1
+## Training set 0.003907738 0.7693755 0.4884155 -0.08925105 0.4603931 0.1145306 -0.004847103</code></pre>
 <pre class="r"><code># RMSE for the Var model was higher, thus ARIMA has higher accuracy. 
 
 #     Adding a principal component with all of the variables
@@ -749,14 +727,10 @@ pca = prcomp(cbind(RGDP,FGOVTR,FFR,NETEXP,MDOAH,DGS10,unrate, IP, PD))
 #       This is the principal component of the all of the values excpet CPI.
 summary(pca)</code></pre>
 <pre><code>## Importance of components:
-##                            PC1  PC2   PC3   PC4   PC5   PC6   PC7   PC8
-## Standard deviation     5267381 1084 107.4 85.63 6.723 2.803 1.941 1.342
-## Proportion of Variance       1    0   0.0  0.00 0.000 0.000 0.000 0.000
-## Cumulative Proportion        1    1   1.0  1.00 1.000 1.000 1.000 1.000
-##                           PC9
-## Standard deviation     0.5789
-## Proportion of Variance 0.0000
-## Cumulative Proportion  1.0000</code></pre>
+##                            PC1  PC2   PC3   PC4   PC5   PC6   PC7   PC8    PC9
+## Standard deviation     5267381 1084 107.4 85.63 6.723 2.803 1.941 1.342 0.5789
+## Proportion of Variance       1    0   0.0  0.00 0.000 0.000 0.000 0.000 0.0000
+## Cumulative Proportion        1    1   1.0  1.00 1.000 1.000 1.000 1.000 1.0000</code></pre>
 <pre class="r"><code>plot(pca$x[,1])</code></pre>
 <p><img src="project_files/figure-html/unnamed-chunk-1-12.png" width="672" /></p>
 <pre class="r"><code>pc = ts(pca$x[,1], frequency = 4, start = c(1966,1,1))
@@ -788,19 +762,19 @@ autoplot(fvar2)</code></pre>
 
 #       Comparing the accuracy
 accuracy(fvar2,d=1, D=0)</code></pre>
-<pre><code>##                                         ME          RMSE           MAE
-## CPI Training set -0.0000000000000008418657     0.8268766     0.5443384
-## pc Training set   0.0000000000217839816749 97062.9507340 59700.3713457
-##                         MPE      MAPE      MASE      ACF1
-## CPI Training set -0.0755122 0.5244213 0.4737458 0.3555163
-## pc Training set   0.6037213 2.6126501 0.6971980 0.9424168</code></pre>
+<pre><code>##                                         ME          RMSE           MAE        MPE      MAPE      MASE
+## CPI Training set -0.0000000000000008418657     0.8268766     0.5443384 -0.0755122 0.5244213 0.4737458
+## pc Training set   0.0000000000217839816749 97062.9507340 59700.3713457  0.6037213 2.6126501 0.6971980
+##                       ACF1
+## CPI Training set 0.3555163
+## pc Training set  0.9424168</code></pre>
 <pre class="r"><code>accuracy(fvar,d=1, D=0)</code></pre>
-<pre><code>##                                          ME       RMSE        MAE
-## CPI Training set   0.0000000000000006735804  0.8287879  0.5443487
-## RGDP Training set -0.0000000000000301718563 72.4195392 50.9553132
-##                           MPE      MAPE      MASE      ACF1
-## CPI Training set  -0.08845486 0.5382390 0.4737548 0.3592322
-## RGDP Training set -0.01274135 0.5458977 0.6022113 0.3443815</code></pre>
+<pre><code>##                                          ME       RMSE        MAE         MPE      MAPE      MASE
+## CPI Training set   0.0000000000000006735804  0.8287879  0.5443487 -0.08845486 0.5382390 0.4737548
+## RGDP Training set -0.0000000000000301718563 72.4195392 50.9553132 -0.01274135 0.5458977 0.6022113
+##                        ACF1
+## CPI Training set  0.3592322
+## RGDP Training set 0.3443815</code></pre>
 <pre class="r"><code>#The RMSE for the principle component RMSE is lower.
 #Thus, it&#39;s preferrable to use the model with the PC component</code></pre>
 
