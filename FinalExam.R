@@ -16,7 +16,7 @@ FinalData = read.csv(file.choose(), header = TRUE)
 # unrate is the unemployment rate quarterly data.
 # IP is the industrial Production quarterly data.
 # PD is the Public Debt quarterly data.
-
+View(FinalData)
 summary(FinalData)
 CPI = ts(FinalData$CPI, frequency = 4, start = c(1966,1,1))
 
@@ -86,7 +86,8 @@ autoplot(Question2C2)
  fcast
  # Since the TrendCPI is simple counting, It's logical to increase the count.
  autoplot(fcast)
-
+ 
+         
 #       Time Series Regression model
  CPItrendRegression = tslm(CPI ~ trend+season)
  summary(CPItrendRegression)
@@ -107,6 +108,8 @@ autoplot(Question2C2)
 # The RMSE for Auto-arima model was lower. Thus I've concluded that the Auto-arima 
 # is more accurate than the Simple Regression model.
 
+ 
+         
 # #     Fitting a Vector Autoregressive model using p = 1 (only one lag) with highly correated variable.
 summary(FinalData)
 cor(FinalData$CPI, FinalData$GDPC1)
@@ -145,6 +148,7 @@ accuracy(fvar, d=1, D=0)
 accuracy(CPI_ARIMA_Forecast)
 # RMSE for the Var model was higher, thus ARIMA has higher accuracy. 
 
+-----------------------------------------------------------------------------------------------
 #     Adding a principal component with all of the variables
 FGOVTR = ts(FinalData$FGOVTR, frequency = 4, start = c(1966,1,1))
 FFR = ts(FinalData$FFR, frequency = 4, start = c(1966,1,1))

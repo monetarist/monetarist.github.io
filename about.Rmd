@@ -34,7 +34,7 @@ Or if you want to contact me just click the "Contact me button" at the top right
 
 My hobby is reading books! 'Why Nations Fail' & 'A Random Walk Down Wall Street' were one of the best books I've ever read. I strongly recommend these books. I've decided to major in Economics after I read 'Why Nations Fail' & I got interested in investing by reading 'A Random Walk Down Wall Street'. If anyone wants to have a comfortable retirement, I highly recommend this book.My favorite PodCast is Dan Carlin's Hard Core History because I love history! 
 
-```{r}
+```{r, message=FALSE,echo=FALSE}
 # some R code to upload my picture.
 ```
 

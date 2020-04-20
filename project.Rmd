@@ -1,6 +1,487 @@
 ---
 title: "Project"
+author: "Yeongjun Oh"
+date: "3/27/2020"
+output: html_document
 ---
 
-```{r, code = readLines("FinalExam.R")}
+## CPI Forecasting Project {.tabset .tabset-pills}
+
+  Through my academics and professional experience as a Marketing Analyst Intern, I've learned not only how to analyze data but also the excitement and passion for analytics. For me, the most exciting part about analytics is forecasting. I believe forecasting is important as fear of the unknown is one of the most fundamental fears of human nature; fear of the unknown. Many scientific accomplishments were implemented to forecast the future such as astronomy; the ancient civilization researched astronomy to predict seasonal patterns and predict short term weather.  [Astronomy&Forecasting](https://earthobservatory.nasa.gov/features/WxForecasting/wx2.php) I believe forecasting helps people ease the fear of unknown and flexibility to plan. 
+  
+
+  In this project, I'm going to showcase my R / analytics skills by forecasting the CPI. The CPI or Consumer Price Index is a price index. It provides insight into how inflation to Average Americans. Although I used CPI for this model, these methods can be applicable and versatile. For instance, these skills allow one to forecast sales, consumer behavior research or even the impact of a recession on sales. 
+  
+  
+  Most importantly I wanted to show how great R can be used as an analytics tool. Many people view R as a classroom statistical programming language and don't view R as a business tool. Like this project, there's more application to R and I hope other people utilize R outside of the classroom environment.
+
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-159973642-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-159973642-1');
+</script>
+</head> 
+
+
+### Libaries & Displaying Data
+In R, there are a lot of libraries that can be used at your disposal. I've used the following libraries for this project.
+
+```{r, message=FALSE, error=TRUE}
+library(vars)
+library(dplyr)
+library(ggplot2)
+library(forecast)
+library(tseries)
+library(readr)
+library(DT)
+library(dplyr)
+library(latticeExtra)
+library(xts)
+library(dygraphs)
+library(tidyverse)
+library(lubridate)
 ```
+
+I imported the data through an API from my Github. 
+
+```{r, message=FALSE}
+GithubData <- "https://raw.githubusercontent.com/monetarist/monetarist.github.io/master/Final%20Exam%20Data.csv"
+FinalData <- read_csv(GithubData)
+```
+
+
+Following is the explanation for the variables. 
+
+- GDPC1 is the Real Gross Domestic Product quarterly data.
+
+- FGOVTR is the Federal Government Tax Receipts quarterly data.
+
+- FFR is the Federal Funds Rate quarterly data.
+
+- NETEXP is the Net Export quarterly data.
+
+- MDOAH is the Mortgage Debt Outstanding quarterly data.
+
+- CPI is the Comsumers Price Index quarterly data.
+
+- DGS10 is the 10-Year Treasury Constant Maturity Rate quarterly data. 
+
+- unrate is the unemployment rate quarterly data.
+
+- IP is the industrial Production quarterly data.
+
+- PD is the Public Debt quarterly data.
+
+This is the Data Table.
+
+```{r, echo=FALSE}
+#summary(FinalData)
+CPI = ts(FinalData$CPI, frequency = 4, start = c(1966,1,1))
+datatable(FinalData, rownames = FALSE, filter = "top", options = list(pageLength=15, scrollX=TRUE))
+```
+
+      Interactive Graphs
+
+
+```{r,echo=FALSE,message=FALSE}
+TempFinalData <- FinalData
+TempFinalData$DATE <- mdy(TempFinalData$DATE)
+CPIData <- xts(x = TempFinalData$CPI, order.by = TempFinalData$DATE)
+UnemploymentData <- xts(x = TempFinalData$unrate, order.by = TempFinalData$DATE)
+
+
+variables <- cbind(CPIData, UnemploymentData)
+
+# plot
+p <- dygraph(variables) %>%
+  dyAxis("y", label = "Unemployment", valueRange = c(0,20), independentTicks = TRUE)%>%
+  dyAxis("y2", label = "CPI", valueRange = c(30,300), independentTicks = TRUE) %>%
+  dySeries("CPIData", axis=('y2')) %>%
+  dyOptions(labelsUTC = TRUE, fillGraph=TRUE, fillAlpha=0.1, drawGrid = FALSE, colorSaturation = TRUE) %>%
+  dyRangeSelector() %>%
+  dyCrosshair(direction = "vertical") %>%
+  dyHighlight(highlightCircleSize = 5, highlightSeriesBackgroundAlpha = 0.2, hideOnMouseOut = FALSE)  %>%
+  dyRoller(rollPeriod = 1) 
+
+p
+```
+
+
+I've combined two times series with different axis into one graph.
+
+
+```{r,echo=FALSE,message=FALSE}
+library(ggplot2)
+library(plotly)
+library(gapminder)
+
+p <- FinalData %>%
+  ggplot( aes(CPI, FGOVTR, size = PD, color= IP)) +
+  geom_point()+
+  scale_x_log10()+
+  theme_bw()
+
+ggplotly(p)
+```
+
+
+The size of the data point shows the magnitude of the public debt. (Bigger size shows the bigger public debt). The color scale represents Industrial Production. (The light blue indicates bigger Industrial Production index). Y-axis is the Federal Government Tax Receipts and the X-axis is the CPI. By using an interactive graph, one can look at the correlation between 4 variables. 
+
+
+### Decomposition
+
+
+         Decomposition of CPI data. 
+The time series model can be decomposed into 3 components: trend, seasonality, and remainder. The trend is the rate of change of the data, which shows the longterm progression of the series. The seasonality is a change in the series/data in fixed intervals with a similar magnitude. The remainder is the random fluctuation in the data. 
+
+This is the decomposition of the CPI data. The seasonal indices indicate that there's small or no seasonality in the data.
+
+```{r}
+Decompose_CPI = stl(CPI, s.window = "per")
+autoplot(Decompose_CPI)
+```
+
+
+         Seasonality of the CPI
+```{r, error=TRUE}
+DSeason_CPI = seasonal(Decompose_CPI)
+DSeason_CPI
+autoplot(DSeason_CPI)+ ylab("Seasonality")
+```
+
+
+By analyzing the seasonal index and the graph, it's clear that CPI data has seasonality. This is how you interpret the Seasonality Index. If the seasonal index is 0.01, then the CPI (or your variable) will be 1% lower than the trend. Due to seasonality, then the CPI will decline 14, 12 in the first and second quarters respectively. Furthermore, CPI will likely to increase 19 and 7 percent more than the trend due to seasonality. As the CPI can change more than 10% due to seasonality, it's clear that there's seasonality.
+
+
+
+         This is a deseasonalized plot of the CPI
+         
+         
+```{r}
+Deseasonal_CPI = seasadj(Decompose_CPI)
+autoplot(Deseasonal_CPI)+ ylab("Deseasonal CPI")
+```
+
+
+The deseasonalized plot focuses on the trend and avoids confusion from seasonal fluctuation.
+
+### ARIMA Model
+
+ARIMA is a time series model that looks at autoregressive (AR), moving average (MA) ('I' stands for the order of integration). There's a lot of detail that I can't explain in this project. More information can be gathered in the link.
+
+[ARIMA](https://en.wikipedia.org/wiki/Autoregressive_integrated_moving_average)
+
+        Using auto.ARIMA to find appropriate ARIMA model.
+
+
+The auto.arima function lets the R choose an ARIMA model. Since it's a SARIMA model shows that the data has seasonality. 
+
+```{r}
+CPI_ARIMA = auto.arima(CPI)
+checkresiduals(CPI_ARIMA)
+```
+
+
+  The first step of forecasting is to check the model's accuracy. One can do this by checking the residual. The residuals are what difference between model(what we expected) and what's observed (the data). When one's analyzing the data, one should prefer to get white noise. The White Noise from a forecasting model or regression indicates that the model is unbiased. Another way to interpret the white noise is the Breusch Godfrey test. The Breusch-Godfrey test indicates that the null hypothesis (residuals are not correlated) through white noise residuals. This is the residual plot, ACF and the histogram of the residuals. The researchers want white noise. The residual plot indicates that the mean of the residuals is 0. The ACF of the residuals is below the confidence interval. The histogram of the residuals is under the normal distribution. From the following evidence, one can conclude that the residuals are white noise. 
+
+The Ljung-Box indicates that the model was looking at 4 seasonal observations (4 quarters).
+
+       Forecasting with ARIMA model selected by auto.ARIMA
+
+With the auto-Arima function, the R will choose which model will choose the ARIMA model. The default " auto.arima " function will minimize the accuracy (by minimizing AIC).
+
+```{r}
+CPI_ARIMA_Forecast = forecast(CPI_ARIMA, h =3)
+CPI_ARIMA_Forecast
+autoplot(CPI_ARIMA_Forecast)
+```
+
+
+With the auto-selected Auto-ARIMA model, the model is predicting the CPI in 2019 Q1, Q2 and Q3 is going to be 253.72, 254.76 and 255.82 respectively.
+
+
+         Customizing ARIMA fucntion
+
+One can customize the ARIMA function by changing the code. In this model, I've selected ARIMA (0,1,1) without a drift model (basic exponential smoothing model). 
+
+```{r}
+Final_Model1 = Arima(CPI, order = c(1,1,1), include.drift = FALSE)
+Question2B = forecast(Final_Model1, h =3)
+Question2B
+```
+
+
+Unlike the " auto.arima " function, the (0,1,1) ARIMA model (basic exponential smoothing model) with a drift have identical forecast. The difference between both models becomes bigger as the time progresses. In the 2019 Q1 forecast, the difference was meager 0.7527.
+
+```{r}
+autoplot(Question2B)
+checkresiduals(Final_Model1)
+```
+
+
+This is the residual plot, ACF and the histogram of the residuals for the ARIMA (0,1,1) model. It's hard to conclude that the mean of the residuals is zero from the residual plot. The ACF of the residuals is above the confidence interval. The histogram of the residuals is under the normal distribution. From the following evidence, residuals are not white noise. The residual of the model is biased.
+
+
+     Fitting a linear trend model with an ARIMA error structure to the CPI data
+
+The ARIMA error models include autocorrelated errors in the model.  In laymen's terms, it's a regression model that incorporates changes in time when considering the correlation between variables. In typical regression models, the error is considered white noise and ignored. The linear trend model with the ARIMA error structure helps the selection of predictors. To find a predictor from the variables, One needs to use an ARIMA error structure model with all other variables and choose the variable with the lowest AIC. However, for simplicity, I'll demonstrate with a simple trend equation (it's essentially counting).
+
+By adding an xreg option into the " auto.arima " function, one can make the ARIMA error structure. 
+
+
+```{r}
+ TrendCPI = c(1:length(CPI))
+ fit = auto.arima(CPI, xreg = TrendCPI)
+ fcast = forecast(fit, xreg= c(213,214,215))
+ #fcast
+ fit
+```
+
+The model produces the following regression model. 
+
+
+$y_{t} = 24.775 + 1.0698 x_{t} +n_{t}$
+
+
+$n_{t} = 0.9806n_{t-1} +\epsilon + 0.4106 \epsilon$
+
+
+$\epsilon$   ~   $(0,0.6009)$
+
+
+Where  $n_{t}$  is an ARIMA (1,0,1) error. 
+
+If we forecast based on this model, the following is going to be the forecast. 
+
+
+```{r}
+fcast
+```
+
+
+The auto.ARIMA function predicted that the CPI is going to be 253.7208 in 2019 Q1. The ARIMA error model has a very close forecast of 253.7250.
+ 
+ 
+### Regression Forecasting
+      
+This a standard Regression Forecasting model with seasonality. (Regression Forecasting Model is similar to FORECAST.ETS.SEASONALITY function in Excel) The regression model provides the accuracy of the seasonality.  
+
+```{r}
+CPItrendRegression = tslm(CPI ~ trend+season)
+ summary(CPItrendRegression)
+```
+
+
+According to the Regression Model, Compared to the first quarter, season 2 and 3 is expected to be slightly lower than the season1. The low coefficient for season 2 and 3 indicate the seasonality is weak or doesn't exist. The high p-value for the seasons indicates that there is no seasonality. However, there is a strong positive trend for CPI. 
+ 
+ 
+    Forecasting with Regression model
+```{r}
+ CPIRegressionForecast = forecast(CPItrendRegression, h =3)
+ CPIRegressionForecast
+```
+
+
+
+    Comparing accuracy of Regression & ARIMA error structure model
+```{r}
+accuracy(CPIRegressionForecast, d =1, D =0)
+
+accuracy(fcast, d =1 , D=0)
+```
+
+The first line is the accuracy of the Regression Model and the second line is the accuracy for the ARIMA error structure model. One can use the accuracy results such as ME, MAE and MAPE to compare the accuracy of the models, but I'm going to use RMSE. The RMSE stands for Root Mean Square Error. The lower number is an indication of an accurate model.
+
+I used d =1 & D =0 to the accuracy function because it's the default. The default will be used throughout the project for consistency. The RMSE for the " auto.arima" model was lower.  Thus I've concluded that the " auto.arima " is more accurate than the Simple Regression Model. 
+
+
+### VAR Model & IRF
+
+In typical OLS, the model assumes that (example of OLS is y = f(x) ) x is not dependant. VAR model is a time series model that assumes that all variables are treated as an endogenous variable. In laymen term, it checks the dependencies of all variables. 
+
+So I'm going to choose a variable that's highly correlated to the CPI and fit a Vector Autoregressive model using p = 1 (only one lag). To choose the variable, I printed a correlation matrix.
+
+
+```{r, message=FALSE, echo=FALSE}
+library(ggcorrplot)
+CorrelationDataTemp <- subset(FinalData, select = c(GDPC1, FGOVTR, FFR, NETEXP, MDOAH, CPI, DGS10,unrate, IP, PD))
+corr <- round(cor(CorrelationDataTemp), 1)
+
+ggcorrplot(corr,
+           hc.order = TRUE,
+           type = "lower",
+           lab = TRUE)
+```
+
+
+The CPI & Real Gross Domestic Product has a strong correlation. So I'm going to use CPI & Real Gross Domestic Product to build a Vector Autoregressive model.
+
+    Modeling a Vector Autoregressive model
+    
+```{r}
+RGDP = ts(FinalData$GDPC1, frequency = 4, start = c(1966,1,1))
+options(scipen = 999)
+VARselect(CPI, RGDP, lag.max = 4, type = 'const')
+var = VAR(cbind(CPI, RGDP), p =2, type = 'const')
+summary(var$varresult$CPI)
+```
+
+
+ So the VARselect function provides me with the optimal lag length for the model. All criteria are suggesting 1 lag. But I'm going to go with 2 lags.
+
+The responses up to 3 periods for both variables due to a one-unit shock in each variable
+
+
+    Impulse Response
+
+I'm going to model an impulse Response to see how exogenous events can impact both variables. One way of understanding impulse Response is what's the impact of GDP if there's a shock in CPI. First, I'm going to but a shock in GDP and observe CPI's response. 
+
+
+```{r}
+ var1=irf(x=var, impulse="RGDP", response = "CPI", boot=TRUE, ortho = FALSE,n.ahead = 3,runs = 1000)
+ var1
+```
+
+Shock in the GDP will have little or no impact to the CPI. Largely CPI stayed stationary. 
+
+
+
+    1 unit shock for CPI       
+```{r}
+var2=irf(x=var, impulse="CPI", response = "RGDP", boot=TRUE, ortho = FALSE, runs = 100)
+plot(var2)
+```
+
+However, CPI's shock will impact the GDP. By analyzing the results in economic thoeries, it's very logical. The Real GDP excludes the inflation (such as CPI) from it's calculation. Therefore, a shock in the Real GDP won't impact the CPI as real GDP is independent of price changes. However, the shock in the inflation can impact the Real GDP. For instance, huge hyper inflation or deflation will impact the real economy becuase of unstable prices.
+
+
+
+
+
+ 
+    3 Point Forecast for CPI & GDP from the Vector Autoregressive Model
+
+Using AIC criteria to determine the optimal lags in the VAR and generating forecast values for the assigned variable up to 3 periods forward.
+
+    
+```{r}
+fvar = forecast(var, h=3)
+fvar$forecast$CPI
+```
+
+
+
+
+    VAR Model
+```{r, error=TRUE}
+var4 = VAR(y=cbind(CPI, RGDP), p =1, type = 'const')
+fvar2 = forecast(var4, h =3)
+fvar2$model
+```
+
+The var model above is a slightly different one as the p = 1. (p is for Lag)One can retrieve the A matrix & $\epsilon_{t}$. The Impulse Response Functions are produced by putting impact into A matrix.
+
+$$
+Y_{t}=
+\left(\begin{array}{cc} 
+1.00206479446 & -0.00001474409\\
+0.5308657 & 0.9953667
+\end{array}\right)
+\left(\begin{array}{cc} 
+Y_{1,t-1} \\ 
+Y_{2,t-1} 
+\end{array}\right)
++
+\left(\begin{array}{cc} 
+0.91930933597 \\ 
+44.4094228 
+\end{array}\right)
+$$ 
+
+
+
+    Auto.ARMA Model & VAR model accuracy comparison
+    
+For consistency, accuracy setting is at d =1 and D = 0. The following is the accuracy of the VAR model.
+
+
+```{r}
+accuracy(fvar, d=1, D=0)
+```
+    
+This is the result of the ARIMA model results inaccuracy. 
+
+```{r}
+accuracy(CPI_ARIMA_Forecast)
+```
+
+RMSE for the Var model was higher, thus ARIMA has higher accuracy. 
+
+
+### Principal Component
+
+The principal component can be used to reduce the number of regressors (variables) in the model. But PC allows keeping most of the info as possible while reducing the regressors. If you want to learn about the statistical theory behind the PC, check out the link. 
+
+[PC](https://medium.com/@aptrishu/understanding-principle-component-analysis-e32be0253ef0)
+
+    Adding a principal component with all of the variables
+```{r, echo=FALSE}
+FGOVTR = ts(FinalData$FGOVTR, frequency = 4, start = c(1966,1,1))
+FFR = ts(FinalData$FFR, frequency = 4, start = c(1966,1,1))
+NETEXP = ts(FinalData$NETEXP, frequency = 4, start = c(1966,1,1))
+MDOAH = ts(FinalData$MDOAH, frequency = 4, start = c(1966,1,1))
+DGS10 = ts(FinalData$DGS10, frequency = 4, start = c(1966,1,1))
+unrate = ts(FinalData$unrate, frequency = 4, start = c(1966,1,1))
+IP = ts(FinalData$IP, frequency = 4, start = c(1966,1,1))
+PD = ts(FinalData$PD, frequency = 4, start = c(1966,1,1))
+```
+
+
+```{r}
+pca = prcomp(cbind(RGDP,FGOVTR,FFR,NETEXP,MDOAH,DGS10,unrate, IP, PD))
+summary(pca)
+plot(pca$x[,1])
+pc = ts(pca$x[,1], frequency = 4, start = c(1966,1,1))
+summary(pc)
+```
+
+This is the Principal Component of all of the variables other than the CPI data. An exact interpretation of the Principal Component is difficult.
+
+        Forecasting with PC componenet model. 
+
+```{r}
+var3 = VAR(cbind(CPI, pc), p =1, type = 'const')
+fvar2 = forecast(var3, h =3)
+autoplot(fvar2)
+fvar2$forecast$CPI
+```
+
+The Vector Autoregressive model with Principal component suggests that for the first quarter of 2019, the CPI will be 253.8980. The exact meaning of the Principal component is hard to interpret. 
+
+
+
+       Comparing the accuracy PC & ARIMA model
+
+
+
+This is the accuracy of the PC
+```{r}
+accuracy(fvar2$forecast$CPI,d=1, D=0)
+```
+
+
+This is the accuracy of the ARIMA model.
+
+
+```{r}
+accuracy(fvar$forecast$CPI,d=1, D=0)
+```
+
+Comparing the accuracy model, one can see that the Principal Component's RMSE is lower than "auto.arima"'s RMSE model. But the difference is meager 0.054. Thus, it's preferable to use the model with the PC component. 
+
