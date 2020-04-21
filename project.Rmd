@@ -1,19 +1,20 @@
 ---
-title: "Project"
+title: "Forecasting Project"
 author: "Yeongjun Oh"
-date: "3/27/2020"
+date: "4/20/2020"
 output: html_document
 ---
 
-## CPI Forecasting Project {.tabset .tabset-pills}
+##  {.tabset .tabset-pills}
 
-  Through my academics and professional experience as a Marketing Analyst Intern, I've learned not only how to analyze data but also the excitement and passion for analytics. For me, the most exciting part about analytics is forecasting. I believe forecasting is important as fear of the unknown is one of the most fundamental fears of human nature; fear of the unknown. Many scientific accomplishments were implemented to forecast the future such as astronomy; the ancient civilization researched astronomy to predict seasonal patterns and predict short term weather.  [Astronomy&Forecasting](https://earthobservatory.nasa.gov/features/WxForecasting/wx2.php) I believe forecasting helps people ease the fear of unknown and flexibility to plan. 
+  Through my academics and professional experience as a Marketing Analyst Intern, I've learned how to analyze data and passion for analytics. For me, the most exciting part about analytics is forecasting. I believe forecasting is important as fear of the unknown is one of the fundamental fears of human nature.  I believe forecasting helps people ease the fear of unknown and flexibility to plan. Furthermore, many scientific accomplishments were implemented to forecast the future such as astronomy; the ancient civilization researched astronomy to predict seasonal patterns and predict short term weather.  [Astronomy&Forecasting](https://earthobservatory.nasa.gov/features/WxForecasting/wx2.php) 
   
 
-  In this project, I'm going to showcase my R / analytics skills by forecasting the CPI. The CPI or Consumer Price Index is a price index. It provides insight into how inflation to Average Americans. Although I used CPI for this model, these methods can be applicable and versatile. For instance, these skills allow one to forecast sales, consumer behavior research or even the impact of a recession on sales. 
+  In this project, I'm going to forecasting the CPI, the Consumer Price Index. It provides insight into how inflation to Average Americans. Although I used CPI for this model, these methods can be applicable and versatile. For instance, these skills allow one to forecast sales, consumer behavior research or even the impact of a recession on sales. 
   
   
-  Most importantly I wanted to show how great R can be used as an analytics tool. Many people view R as a classroom statistical programming language and don't view R as a business tool. Like this project, there's more application to R and I hope other people utilize R outside of the classroom environment.
+  My secondary objective to this project is that I wanted to show how great R can be used as an analytics and data visualization tool. R is an excellent tool for analyizing and visualizing data. I hope this encourages others to use R to make pretty and interactive graphs. 
+  
 
 
 
@@ -29,7 +30,7 @@ output: html_document
 </head> 
 
 
-### Libaries & Displaying Data
+### Libaries & Data Visualization
 In R, there are a lot of libraries that can be used at your disposal. I've used the following libraries for this project.
 
 ```{r, message=FALSE, error=TRUE}
@@ -48,10 +49,11 @@ library(tidyverse)
 library(lubridate)
 ```
 
-I imported the data through an API from my Github. 
+This is how i imported the data. [Data](https://github.com/monetarist/monetarist.github.io/blob/master/Final_Exam_Data.csv) 
+The link is where i imported the data.
 
 ```{r, message=FALSE}
-GithubData <- "https://raw.githubusercontent.com/monetarist/monetarist.github.io/master/Final%20Exam%20Data.csv"
+GithubData <- "https://raw.githubusercontent.com/monetarist/monetarist.github.io/master/Final_Exam_Data.csv"
 FinalData <- read_csv(GithubData)
 ```
 
@@ -86,21 +88,21 @@ CPI = ts(FinalData$CPI, frequency = 4, start = c(1966,1,1))
 datatable(FinalData, rownames = FALSE, filter = "top", options = list(pageLength=15, scrollX=TRUE))
 ```
 
-      Interactive Graphs
+
 
 
 ```{r,echo=FALSE,message=FALSE}
 TempFinalData <- FinalData
 TempFinalData$DATE <- mdy(TempFinalData$DATE)
 CPIData <- xts(x = TempFinalData$CPI, order.by = TempFinalData$DATE)
-UnemploymentData <- xts(x = TempFinalData$unrate, order.by = TempFinalData$DATE)
+GDPData <- xts(x = TempFinalData$GDPC1, order.by = TempFinalData$DATE)
 
 
-variables <- cbind(CPIData, UnemploymentData)
+variables <- cbind(CPIData, GDPData)
 
 # plot
 p <- dygraph(variables) %>%
-  dyAxis("y", label = "Unemployment", valueRange = c(0,20), independentTicks = TRUE)%>%
+  dyAxis("y", label = "Real GDP", valueRange = c(3000,20000), independentTicks = TRUE)%>%
   dyAxis("y2", label = "CPI", valueRange = c(30,300), independentTicks = TRUE) %>%
   dySeries("CPIData", axis=('y2')) %>%
   dyOptions(labelsUTC = TRUE, fillGraph=TRUE, fillAlpha=0.1, drawGrid = FALSE, colorSaturation = TRUE) %>%
@@ -113,7 +115,8 @@ p
 ```
 
 
-I've combined two times series with different axis into one graph.
+
+This is a time series graph of Real GDP and CPI. I choose these two data because they are both correlated and I'm going to use these variables to build a VAR model. see VAR Model & IRF tab for more info.
 
 
 ```{r,echo=FALSE,message=FALSE}
@@ -132,6 +135,8 @@ ggplotly(p)
 
 
 The size of the data point shows the magnitude of the public debt. (Bigger size shows the bigger public debt). The color scale represents Industrial Production. (The light blue indicates bigger Industrial Production index). Y-axis is the Federal Government Tax Receipts and the X-axis is the CPI. By using an interactive graph, one can look at the correlation between 4 variables. 
+
+It's clear that the Government Tax Receipts, Industrial Production and Public debt are all positively correlated with CPI. However, it's not wise to conclude the correlation into causation. Further analysis is required to check the true correlation between these varibles. In fact, most variables are positively correlated. So certain forecasting models will control the effects of other varibles into forecasting. See Principal Component tab for more info.
 
 
 ### Decomposition
@@ -301,7 +306,7 @@ The first line is the accuracy of the Regression Model and the second line is th
 I used d =1 & D =0 to the accuracy function because it's the default. The default will be used throughout the project for consistency. The RMSE for the " auto.arima" model was lower.  Thus I've concluded that the " auto.arima " is more accurate than the Simple Regression Model. 
 
 
-### VAR Model & IRF
+### VAR Model & IRF {#custom}
 
 In typical OLS, the model assumes that (example of OLS is y = f(x) ) x is not dependant. VAR model is a time series model that assumes that all variables are treated as an endogenous variable. In laymen term, it checks the dependencies of all variables. 
 

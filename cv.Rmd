@@ -2,6 +2,11 @@
 title: "CV"
 ---
 
+You can download the resume at the link.
+
+
+
+
 <head>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-159973642-1"></script>
@@ -16,6 +21,4 @@ title: "CV"
 
 <a href="CV.pdf#" class="download" title="Download CV as PDF">Download CV</a>			
 
-## This is my CV. 
 
-Please feel free to download my CV.
