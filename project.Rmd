@@ -5,6 +5,20 @@ date: "4/20/2020"
 output: html_document
 ---
 
+<head>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-159973642-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-159973642-1');
+</script>
+</head> 
+
+
+
 ##  {.tabset .tabset-pills}
 
   Through my academics and professional experience as a Marketing Analyst Intern, I've learned how to analyze data and passion for analytics. For me, the most exciting part about analytics is forecasting. I believe forecasting is important as fear of the unknown is one of the fundamental fears of human nature.  I believe forecasting helps people ease the fear of unknown and flexibility to plan. Furthermore, many scientific accomplishments were implemented to forecast the future such as astronomy; the ancient civilization researched astronomy to predict seasonal patterns and predict short term weather.  [Astronomy&Forecasting](https://earthobservatory.nasa.gov/features/WxForecasting/wx2.php) 
