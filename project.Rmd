@@ -20,15 +20,15 @@ output: html_document
 
 
 ##  {.tabset .tabset-pills}
+  
+  
+  Through my academics and professional experience as a Marketing Analyst Intern, I have learned how to analyze data and gained passion for analytics, especially forecasting. The law and order that governs how this world operates can be calculated and challenged through Data Analytics. For businesses, it could mean that the consumer pattern based on seasonality can be computed and, thus, can estimate future customer behaviors.
+In this project, I’m going to forecast the CPI, the Consumer Price Index. The Consumer Price Index is the inflation in the United States, which represents changes in general price level and cost of living.
 
-  Through my academics and professional experience as a Marketing Analyst Intern, I've learned how to analyze data and passion for analytics. For me, the most exciting part about analytics is forecasting. I believe forecasting is important as fear of the unknown is one of the fundamental fears of human nature.  I believe forecasting helps people ease the fear of unknown and flexibility to plan. Furthermore, many scientific accomplishments were implemented to forecast the future such as astronomy; the ancient civilization researched astronomy to predict seasonal patterns and predict short term weather.  [Astronomy&Forecasting](https://earthobservatory.nasa.gov/features/WxForecasting/wx2.php) 
+  Although I used CPI for this model, these methods are applicable and versatile for a number of variations. For instance, these skills allow one to forecast sales, consumer behavior research, or even the impact of a recession on sales.
   
-  
+  My primary objective of this project is to exemplify how great R can be used as an analytics and data visualization tool. I hope this encourages others to use R to make pretty and interactive graphs.
 
-  In this project, I'm going to forecasting the CPI, the Consumer Price Index. It provides insight into how inflation to Average Americans. Although I used CPI for this model, these methods can be applicable and versatile. For instance, these skills allow one to forecast sales, consumer behavior research or even the impact of a recession on sales. 
-  
-  
-  My secondary objective to this project is that I wanted to show how great R can be used as an analytics and data visualization tool. R is an excellent tool for analyizing and visualizing data. I hope this encourages others to use R to make pretty and interactive graphs. 
   
 
 
@@ -55,8 +55,8 @@ library(tidyverse)
 library(lubridate)
 ```
 
-This is how i imported the data. [Data](https://github.com/monetarist/monetarist.github.io/blob/master/Final_Exam_Data.csv) 
-The link is where i imported the data.
+This is how I imported the data. [Data](https://github.com/monetarist/monetarist.github.io/blob/master/Final_Exam_Data.csv) 
+
 
 ```{r, message=FALSE}
 GithubData <- "https://raw.githubusercontent.com/monetarist/monetarist.github.io/master/Final_Exam_Data.csv"
@@ -64,7 +64,7 @@ FinalData <- read_csv(GithubData)
 ```
 
 
-Following is the explanation for the variables. 
+Followings are the explanations for the variables. 
 
 - GDPC1 is the Real Gross Domestic Product quarterly data.
 
@@ -122,7 +122,9 @@ p
 
 
 
-This is a time series graph of Real GDP and CPI. I choose these two data because they are both correlated and I'm going to use these variables to build a VAR model. see VAR Model & IRF tab for more info.
+This is a time series graph of Real GDP and CPI. Since these two variables are correlated, I have used these two variables to build a VAR model. 
+See VAR model & IRF tab for more info!
+
 
 
 ```{r,echo=FALSE,message=FALSE}
@@ -140,9 +142,10 @@ ggplotly(p)
 ```
 
 
-The size of the data point shows the magnitude of the public debt. (Bigger size shows the bigger public debt). The color scale represents Industrial Production. (The light blue indicates bigger Industrial Production index). Y-axis is the Federal Government Tax Receipts and the X-axis is the CPI. By using an interactive graph, one can look at the correlation between 4 variables. 
+The size of the data points show the magnitude of the public debt (Bigger sizes show the bigger public debts). The color scale represents Industrial Production (The light blue indicates bigger Industrial Production index). Y-axis is the Federal Government Tax Receipts and the X-axis is the CPI. By using an interactive graph, one can look at the correlation between 4 variables. 
 
-It's clear that the Government Tax Receipts, Industrial Production and Public debt are all positively correlated with CPI. However, it's not wise to conclude the correlation into causation. Further analysis is required to check the true correlation between these varibles. In fact, most variables are positively correlated. So certain forecasting models will control the effects of other varibles into forecasting. See Principal Component tab for more info.
+
+  It’s clear that the Government Tax Receipts, Industrial Production and Public debt are all positively correlated with CPI. However, it’s not wise to conclude the correlation equals causation. Further analysis is required to check the true correlation between these varibles since all variables are positively correlated. To mitigate these issues, a few forecasting models have been designed to control the effects of other varibles into forecasting. See Principal Component tab for more info.
 
 
 ### Decomposition
@@ -151,7 +154,7 @@ It's clear that the Government Tax Receipts, Industrial Production and Public de
          Decomposition of CPI data. 
 The time series model can be decomposed into 3 components: trend, seasonality, and remainder. The trend is the rate of change of the data, which shows the longterm progression of the series. The seasonality is a change in the series/data in fixed intervals with a similar magnitude. The remainder is the random fluctuation in the data. 
 
-This is the decomposition of the CPI data. The seasonal indices indicate that there's small or no seasonality in the data.
+These are the decomposition of the CPI data. The seasonal indices indicate that there's small or no seasonality in the data.
 
 ```{r}
 Decompose_CPI = stl(CPI, s.window = "per")
@@ -167,11 +170,11 @@ autoplot(DSeason_CPI)+ ylab("Seasonality")
 ```
 
 
-By analyzing the seasonal index and the graph, it's clear that CPI data has seasonality. This is how you interpret the Seasonality Index. If the seasonal index is 0.01, then the CPI (or your variable) will be 1% lower than the trend. Due to seasonality, then the CPI will decline 14, 12 in the first and second quarters respectively. Furthermore, CPI will likely to increase 19 and 7 percent more than the trend due to seasonality. As the CPI can change more than 10% due to seasonality, it's clear that there's seasonality.
+By analyzing the seasonal index and the graph, it's clear that CPI data has seasonality. This is how you interpret the Seasonality Index. If the seasonal index is 0.01, then the CPI (or your variable) will be 1% lower than the trend. Due to seasonality, the CPI will decline 14 and 12 percent from the trend in the first and second quarters, respectively. Furthermore, CPI will likely to increase 19 and 7 percent more than the trend due to seasonality during the first and second quarters, respectively. As the CPI can change more than 10% due to seasonality, it's clear that there's contributing seasonality.
 
 
 
-         This is a deseasonalized plot of the CPI
+         This is deseasonalized plot of the CPI
          
          
 ```{r}
@@ -184,14 +187,14 @@ The deseasonalized plot focuses on the trend and avoids confusion from seasonal 
 
 ### ARIMA Model
 
-ARIMA is a time series model that looks at autoregressive (AR), moving average (MA) ('I' stands for the order of integration). There's a lot of detail that I can't explain in this project. More information can be gathered in the link.
+ARIMA is a time series model that looks at autoregressive (AR), moving average (MA), and order of integration (I). There's a lot of detail that I can't explain in this project. More information is available in the link.
 
 [ARIMA](https://en.wikipedia.org/wiki/Autoregressive_integrated_moving_average)
 
         Using auto.ARIMA to find appropriate ARIMA model.
 
 
-The auto.arima function lets the R choose an ARIMA model. Since it's a SARIMA model shows that the data has seasonality. 
+The auto.arima function lets the R choose an ARIMA model. Since R automatically chose a SARIMA model, it's an indicator that the seasonality exists. 
 
 ```{r}
 CPI_ARIMA = auto.arima(CPI)
@@ -199,13 +202,15 @@ checkresiduals(CPI_ARIMA)
 ```
 
 
-  The first step of forecasting is to check the model's accuracy. One can do this by checking the residual. The residuals are what difference between model(what we expected) and what's observed (the data). When one's analyzing the data, one should prefer to get white noise. The White Noise from a forecasting model or regression indicates that the model is unbiased. Another way to interpret the white noise is the Breusch Godfrey test. The Breusch-Godfrey test indicates that the null hypothesis (residuals are not correlated) through white noise residuals. This is the residual plot, ACF and the histogram of the residuals. The researchers want white noise. The residual plot indicates that the mean of the residuals is 0. The ACF of the residuals is below the confidence interval. The histogram of the residuals is under the normal distribution. From the following evidence, one can conclude that the residuals are white noise. 
+  The first step of forecasting is to check the model's accuracy. One can do this by checking the residual, which is what differentiates between model (what we expected) and what's observed (the data). When one is analyzing the data, one should prefer to get white noise, which indicates that the model is unbiased if the White Noise is from a forecasting model or regression. Another way to interpret the white noise is the Breusch Godfrey test. The Breusch-Godfrey test indicates whether the null hypothesis is rejected or not (the null hypotensis indicates that residuals are not correlated) through white noise residuals. This is the residual plot, ACF, and the histogram of the residuals. The researchers want white noise. 
+  
+  In this specific model, the residual plot indicates that the mean of the residuals is 0. The ACF of the residuals is below the confidence interval. The histogram of the residuals is under the normal distribution. From the following evidences, one can conclude that the residuals are white noise. 
 
 The Ljung-Box indicates that the model was looking at 4 seasonal observations (4 quarters).
 
        Forecasting with ARIMA model selected by auto.ARIMA
 
-With the auto-Arima function, the R will choose which model will choose the ARIMA model. The default " auto.arima " function will minimize the accuracy (by minimizing AIC).
+With the auto.arima function, the R will automatically choose a ARIMA model that maximizes the accuracy (by minimizing AIC).
 
 ```{r}
 CPI_ARIMA_Forecast = forecast(CPI_ARIMA, h =3)
@@ -214,7 +219,7 @@ autoplot(CPI_ARIMA_Forecast)
 ```
 
 
-With the auto-selected Auto-ARIMA model, the model is predicting the CPI in 2019 Q1, Q2 and Q3 is going to be 253.72, 254.76 and 255.82 respectively.
+With the auto-selected "auto.arima" model, the model is predicting the CPI in 2019 Q1, Q2, and Q3 is going to be 253.72, 254.76, and 255.82 , respectively.
 
 
          Customizing ARIMA fucntion
@@ -228,7 +233,7 @@ Question2B
 ```
 
 
-Unlike the " auto.arima " function, the (0,1,1) ARIMA model (basic exponential smoothing model) with a drift have identical forecast. The difference between both models becomes bigger as the time progresses. In the 2019 Q1 forecast, the difference was meager 0.7527.
+Unlike the " auto.arima " function, the (0,1,1) ARIMA model (basic exponential smoothing model) with a drift have identical forecast, initally. However, the difference between both models becomes bigger as the time progresses. 
 
 ```{r}
 autoplot(Question2B)
@@ -236,7 +241,7 @@ checkresiduals(Final_Model1)
 ```
 
 
-This is the residual plot, ACF and the histogram of the residuals for the ARIMA (0,1,1) model. It's hard to conclude that the mean of the residuals is zero from the residual plot. The ACF of the residuals is above the confidence interval. The histogram of the residuals is under the normal distribution. From the following evidence, residuals are not white noise. The residual of the model is biased.
+These are the residual plot, ACF, and the histogram of the residuals for the ARIMA (0,1,1) model. It's hard to conclude that the mean of the residuals is zero from the residual plot. The ACF of the residuals is above the confidence interval. The histogram of the residuals is under the normal distribution. From the following evidence, residuals are not white noise. Therefore, the residual of the model is biased.
 
 
      Fitting a linear trend model with an ARIMA error structure to the CPI data

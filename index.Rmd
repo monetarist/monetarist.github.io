@@ -14,7 +14,7 @@ title: "Welcome to my website!"
 </script>
 </head> 
 
-This is the Home Page of my Website. If you want to know about me, Check out [About](https://monetarist.github.io/about.html) page. You can also check out my R project [Project](https://monetarist.github.io/project.html). I've build a CPI Forecasting Project. Or my [Resume](https://monetarist.github.io/cv.html). You can click on my Link and check it out! 
+This is the home page of my website. If you want to know about me, check out [About](https://monetarist.github.io/about.html) page. You can also check out my R [Project](https://monetarist.github.io/project.html), which is a CPI Forecasting Project, or my [Resume](https://monetarist.github.io/cv.html). You can click on my links (the blue colored words) and check it out! 
 
 
 
