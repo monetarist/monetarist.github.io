@@ -22,12 +22,12 @@ output: html_document
 ##  {.tabset .tabset-pills}
   
   
-  Through my academics and professional experience as a Marketing Analyst Intern, I have learned how to analyze data and gained passion for analytics, especially forecasting. The law and order that governs how this world operates can be calculated and challenged through Data Analytics. For businesses, it could mean that the consumer pattern based on seasonality can be computed and, thus, can estimate future customer behaviors.
-In this project, I’m going to forecast the CPI, the Consumer Price Index. The Consumer Price Index is the inflation in the United States, which represents changes in general price level and cost of living.
+  Through my academic and professional experience as a Marketing Analyst Intern, I have learned how to analyze data and gain a passion for analytics, especially forecasting. The law and order that governs how this world operates can be calculated and challenged through Data Analytics. For businesses, it could mean that calculating consumer patterns based on seasonality and, thus, can estimate future customer behaviors will bring efficient allocation of resources.
+In this project, I’m going to forecast the CPI, the Consumer Price Index. The Consumer Price Index is inflation in the United States, representing changes in the general price level and cost of living.
 
   Although I used CPI for this model, these methods are applicable and versatile for a number of variations. For instance, these skills allow one to forecast sales, consumer behavior research, or even the impact of a recession on sales.
   
-  My primary objective of this project is to exemplify how great R can be used as an analytics and data visualization tool. I hope this encourages others to use R to make pretty and interactive graphs.
+  My primary objective is to exemplify how great R can be used as an analytics and data visualization tool. I hope this encourages others to use R to make pretty and interactive graphs.
 
   
 
